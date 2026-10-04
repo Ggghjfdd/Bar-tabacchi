@@ -59,7 +59,7 @@ if('serviceWorker' in navigator){
 <div id="pistolaCaricoModal" class="hidden fixed inset-0 bg-black/80 z-[110] flex items-center justify-center p-4"><div class="bg-white rounded-[24px] border-4 border-orange-400 p-6 max-w-[400px] w-full"><h3 class="font-black text-[16px]">CARICO PISTOLA</h3><p id="pCaricoInfo" class="mt-2 font-bold bg-orange-100 p-3 rounded-xl border-2 text-[13px]"></p><p id="pCaricoStock" class="font-mono text-[11px] mt-2"></p><label class="font-black text-[13px] mt-4 block">QUANTI PEZZI SONO ARRIVATI? * OBBLIGATORIO</label><input id="pCaricoQty" readonly onclick="openNumpad('pCaricoQty','QUANTI PEZZI ARRIVATI?')" class="w-full mt-2 border-4 border-black rounded-2xl px-5 py-5 text-[32px] font-black text-center bg-yellow-50" placeholder="TAP PER TASTIERA"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="confermaPistolaCarico()" class="bg-black text-white rounded-2xl py-4 font-black">CONFERMA</button><button onclick="chiudiPistolaCarico()" class="bg-white border-2 rounded-2xl py-4 font-bold">Annulla</button></div></div></div>
 <main class="max-w-[1400px] mx-auto p-3 md:p-6 pb-24">
 <div id="tab-cassa" class="tab-page"><div class="grid grid-cols-12 gap-4"><div class="col-span-12 lg:col-span-7 bg-white rounded-2xl border p-5">
-<h2 class="font-black text-[13px] tracking-widest">CASSA - SOLO PISTOLA</h2>
+<h2 class="font-black text-[13px] tracking-widest">CASSA</h2>
 
 <!-- PISTOLA NASCOSTA - NON SERVE CLICCARE -->
 <input id="pistolaCassa" style="position:absolute; left:-9999px; opacity:0; width:1px; height:1px;" autofocus>
