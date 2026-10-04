@@ -11,13 +11,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0f172a">
-<title>Bar Tabacchi V9.1 - PISTOLA ONLY - FIX CASSA</title>
-<link rel="manifest" href="./manifest.json?v=v9.1">
-<link rel="icon" href="./icons/icon.svg?v=v9.1" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.1">
+<title>Bar Tabacchi V9.2 - NUMPAD FULL</title>
+<link rel="manifest" href="./manifest.json?v=v9.2">
+<link rel="icon" href="./icons/icon.svg?v=v9.2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.2">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-const APP_VERSION='v9.1-pistola-only-fix-cassa';
+const APP_VERSION='v9.2-numpad-full';
 if(localStorage.getItem('bt_ver')!==APP_VERSION){
  if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));}
  if('caches' in window){caches.keys().then(k=>k.forEach(c=>caches.delete(c)));}
@@ -35,7 +35,7 @@ if('serviceWorker' in navigator){
 <body>
 <header class="sticky top-0 z-50 bg-white border-b shadow-sm">
 <div class="bg-slate-900 px-4 py-3 flex justify-between items-center" style="padding-top:calc(12px + env(safe-area-inset-top))">
-<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.1 - PISTOLA ONLY</h1><p class="text-slate-400 text-[10px] font-bold">SUPABASE + PISTOLA ONLY - 80939184 - FIX CASSA</p></div></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.2 - NUMPAD FULL</h1><p class="text-slate-400 text-[10px] font-bold">SUPABASE + PISTOLA + TASTIERA CUSTOM</p></div></div>
 <div id="statusSupa" class="bg-yellow-400 text-black px-3 py-1.5 rounded-full text-[10px] font-black">SUPABASE...</div>
 </div>
 <div class="px-3 py-2 flex gap-2 overflow-x-auto bg-white">
@@ -45,10 +45,40 @@ if('serviceWorker' in navigator){
 <button onclick="openTab('mag')" id="b-mag" class="bg-white border-2 px-5 py-2.5 rounded-xl font-bold text-[11px]">MAGAZZINO</button>
 </div>
 </header>
+
+<div id="customNumpad" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-end justify-center p-3" onclick="if(event.target.id==='customNumpad') closeNumpad()">
+  <div class="bg-white rounded-[24px] w-full max-w-[360px] p-4 shadow-2xl border-4 border-black">
+    <div class="flex justify-between items-center mb-3">
+      <span id="numpadLabel" class="font-black text-[13px]">QUANTITA'</span>
+      <button onclick="closeNumpad()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button>
+    </div>
+    <div id="numpadDisplay" class="bg-black text-yellow-300 rounded-xl p-4 text-[40px] font-black text-center font-mono mb-3 tracking-widest">0</div>
+    <div class="grid grid-cols-3 gap-2">
+      <button onclick="numpadPress('1')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">1</button>
+      <button onclick="numpadPress('2')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">2</button>
+      <button onclick="numpadPress('3')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">3</button>
+      <button onclick="numpadPress('4')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">4</button>
+      <button onclick="numpadPress('5')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">5</button>
+      <button onclick="numpadPress('6')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">6</button>
+      <button onclick="numpadPress('7')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">7</button>
+      <button onclick="numpadPress('8')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">8</button>
+      <button onclick="numpadPress('9')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px] active:bg-yellow-300">9</button>
+      <button onclick="numpadClear()" class="bg-red-500 text-white rounded-2xl py-6 font-black text-[16px]">C</button>
+      <button onclick="numpadPress('0')" class="bg-slate-900 text-white rounded-2xl py-6 font-black text-[24px]">0</button>
+      <button onclick="numpadDel()" class="bg-orange-400 text-black rounded-2xl py-6 font-black text-[22px]">⌫</button>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <button onclick="numpadPress('.')" class="bg-white border-2 rounded-2xl py-4 font-black text-[20px]">.</button>
+      <button onclick="numpadOk()" class="bg-emerald-500 text-white rounded-2xl py-4 font-black text-[16px] col-span-1">✅ OK</button>
+    </div>
+  </div>
+</div>
+
 <div id="passModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 max-w-[340px] w-full"><h3 class="text-[16px] font-black">Accesso Riservato</h3><p class="text-[12px] mt-2 text-slate-500">Password per <span id="passAreaName" class="font-black"></span></p><input id="passInput" type="password" placeholder="80939184" class="mt-4 w-full border-2 rounded-xl px-4 py-3 text-[16px] font-black text-center"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="checkPass()" class="bg-slate-900 text-white rounded-xl py-3 font-bold">SBLOCCA</button><button onclick="closePassModal()" class="bg-white border-2 rounded-xl py-3 font-bold">Annulla</button></div><p id="passError" class="hidden text-red-500 text-[12px] font-bold mt-2 text-center">Password errata</p></div></div>
 <div id="scorteModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-[700px] w-full max-h-[85vh] flex flex-col"><div class="p-5 border-b"><div class="flex justify-between"><div><h3 class="font-black">GESTISCI SCORTE</h3></div><button onclick="closeScorteModal()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button></div><input id="searchScorte" oninput="renderScorteModal()" placeholder="Cerca..." class="mt-3 w-full border-2 rounded-xl px-4 py-2.5 text-[12px] font-bold"></div><div id="scorteList" class="p-4 overflow-auto space-y-2 flex-1"></div><div class="p-4 border-t flex justify-end"><button onclick="closeScorteModal()" class="bg-slate-900 text-white rounded-xl px-6 py-3 font-bold text-[12px]">FATTO</button></div></div></div>
 <div id="ordineModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-[800px] w-full max-h-[85vh] flex flex-col"><div class="p-5 border-b"><div class="flex justify-between"><div><h3 class="font-black">COSA ORDINARE</h3><p class="text-[11px] text-slate-500">Mancanza=SCORTA-GIACENZA. Se <=5 non ordina. Se >5 stecche da 10 max SCORTA+5</p></div><button onclick="closeOrdineModal()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button></div><div id="ordineSummary" class="mt-3 grid grid-cols-3 gap-2"></div></div><div id="ordineList" class="p-4 overflow-auto space-y-2 flex-1"></div><div class="p-4 border-t bg-yellow-50 flex gap-2"><button onclick="exportOrdineCSV()" class="bg-slate-900 text-white rounded-xl px-5 py-3 font-bold text-[11px]">CSV</button><button onclick="closeOrdineModal()" class="ml-auto bg-white border-2 rounded-xl px-5 py-3 font-bold text-[11px]">CHIUDI</button></div></div></div>
-<div id="pistolaCaricoModal" class="hidden fixed inset-0 bg-black/80 z-[110] flex items-center justify-center p-4"><div class="bg-white rounded-[24px] border-4 border-orange-400 p-6 max-w-[400px] w-full"><h3 class="font-black text-[16px]">CARICO PISTOLA</h3><p id="pCaricoInfo" class="mt-2 font-bold bg-orange-100 p-3 rounded-xl border-2 text-[13px]"></p><p id="pCaricoStock" class="font-mono text-[11px] mt-2"></p><label class="font-black text-[13px] mt-4 block">QUANTI PEZZI SONO ARRIVATI? * OBBLIGATORIO</label><input id="pCaricoQty" type="number" min="1" inputmode="numeric" class="w-full mt-2 border-4 border-black rounded-2xl px-5 py-5 text-[32px] font-black text-center" placeholder="Es: 30"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="confermaPistolaCarico()" class="bg-black text-white rounded-2xl py-4 font-black">CONFERMA</button><button onclick="chiudiPistolaCarico()" class="bg-white border-2 rounded-2xl py-4 font-bold">Annulla</button></div></div></div>
+<div id="pistolaCaricoModal" class="hidden fixed inset-0 bg-black/80 z-[110] flex items-center justify-center p-4"><div class="bg-white rounded-[24px] border-4 border-orange-400 p-6 max-w-[400px] w-full"><h3 class="font-black text-[16px]">CARICO PISTOLA</h3><p id="pCaricoInfo" class="mt-2 font-bold bg-orange-100 p-3 rounded-xl border-2 text-[13px]"></p><p id="pCaricoStock" class="font-mono text-[11px] mt-2"></p><label class="font-black text-[13px] mt-4 block">QUANTI PEZZI SONO ARRIVATI? * OBBLIGATORIO</label><input id="pCaricoQty" readonly onclick="openNumpad('pCaricoQty','QUANTI PEZZI ARRIVATI?')" class="w-full mt-2 border-4 border-black rounded-2xl px-5 py-5 text-[32px] font-black text-center bg-yellow-50" placeholder="TAP PER TASTIERA"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="confermaPistolaCarico()" class="bg-black text-white rounded-2xl py-4 font-black">CONFERMA</button><button onclick="chiudiPistolaCarico()" class="bg-white border-2 rounded-2xl py-4 font-bold">Annulla</button></div></div></div>
+
 <main class="max-w-[1400px] mx-auto p-3 md:p-6 pb-24">
 <div id="tab-cassa" class="tab-page"><div class="grid grid-cols-12 gap-4">
 <div class="col-span-12 lg:col-span-7 bg-white rounded-2xl border p-5">
@@ -59,12 +89,12 @@ if('serviceWorker' in navigator){
 </div>
 <p id="lastScan" class="font-mono text-[11px] bg-slate-900 text-white mt-3 p-3 rounded-xl">In attesa pistola...</p>
 <div class="mt-3 flex gap-2"><input id="manualCode" placeholder="Codice manuale..." class="flex-1 border-2 rounded-xl px-4 py-2.5 font-mono font-bold text-[12px]"><button onclick="manualAdd()" class="bg-slate-900 text-white px-5 rounded-xl font-bold text-[12px]">OK</button></div>
-<div id="newProductAlert" class="hidden mt-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4"><p class="font-bold text-[12px]">Nuovo: <span id="newCodeDisplay" class="font-mono bg-slate-900 text-white px-2 py-1 rounded text-[10px]"></span></p><div class="grid grid-cols-2 gap-2 mt-2"><input id="npMarca" value="CiccioCiccio" class="border-2 rounded-xl px-3 py-2 text-[11px] font-bold"><input id="npNome" placeholder="Nome" class="border-2 rounded-xl px-3 py-2 text-[11px]"><input id="npPrezzo" type="number" value="6.70" class="border-2 rounded-xl px-3 py-2 text-[11px]"><input id="npQty" type="number" value="10" class="border-2 rounded-xl px-3 py-2 text-[11px]"></div><div class="grid grid-cols-2 gap-2 mt-2"><button onclick="saveNewProduct()" class="bg-slate-900 text-white rounded-xl py-2 font-bold text-[11px]">SALVA SU SUPABASE</button><button onclick="cancelNew()" class="bg-white border-2 rounded-xl py-2 font-bold text-[11px]">Annulla</button></div></div>
+<div id="newProductAlert" class="hidden mt-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4"><p class="font-bold text-[12px]">Nuovo: <span id="newCodeDisplay" class="font-mono bg-slate-900 text-white px-2 py-1 rounded text-[10px]"></span></p><div class="grid grid-cols-2 gap-2 mt-2"><input id="npMarca" value="CiccioCiccio" class="border-2 rounded-xl px-3 py-2 text-[11px] font-bold"><input id="npNome" placeholder="Nome" class="border-2 rounded-xl px-3 py-2 text-[11px]"><input id="npPrezzo" readonly onclick="openNumpad('npPrezzo','PREZZO €')" value="6.70" class="border-2 rounded-xl px-3 py-2 text-[11px] bg-yellow-50"><input id="npQty" readonly onclick="openNumpad('npQty','QUANTITA')" value="10" class="border-2 rounded-xl px-3 py-2 text-[11px] bg-yellow-50"></div><div class="grid grid-cols-2 gap-2 mt-2"><button onclick="saveNewProduct()" class="bg-slate-900 text-white rounded-xl py-2 font-bold text-[11px]">SALVA SU SUPABASE</button><button onclick="cancelNew()" class="bg-white border-2 rounded-xl py-2 font-bold text-[11px]">Annulla</button></div></div>
 <div class="mt-6 border-t pt-4"><h3 class="font-black text-[11px]">CATALOGO <span id="countCatalogo" class="bg-slate-100 px-2 py-1 rounded-full text-[10px] ml-2"></span></h3><div id="catalogoGrid" class="grid grid-cols-2 gap-2 mt-3"></div></div>
 </div>
 <div class="col-span-12 lg:col-span-5 space-y-4"><div class="bg-slate-900 text-white rounded-2xl p-5"><div class="flex justify-between"><h2 class="font-black text-[13px]">SCONTRINO</h2><span id="pezziCarrello" class="bg-white/10 border px-3 py-1 rounded-full text-[10px] font-bold">0 pz</span></div><div id="carrello" class="mt-4 space-y-2 min-h-[100px]"></div><div class="mt-4 bg-white/10 rounded-xl p-4 flex justify-between"><span class="text-[11px] font-bold text-slate-300">TOTALE</span><span id="totale" class="font-black text-[26px]">€ 0.00</span></div><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="setPay('contanti')" id="payContanti" class="bg-white text-slate-900 rounded-xl py-2.5 font-bold text-[11px]">💵 CONTANTI</button><button onclick="setPay('carta')" id="payCarta" class="bg-white/10 border rounded-xl py-2.5 font-bold text-[11px]">💳 CARTA</button></div><button onclick="finalizza()" class="w-full mt-3 bg-emerald-500 text-white rounded-xl py-3 font-black text-[12px]">✅ CONFERMA E SCARICA SU SUPABASE</button></div><div class="bg-white rounded-2xl border p-4"><div class="flex justify-between"><h3 class="font-black text-[11px]">VENDITE OGGI</h3><span id="oggiTot" class="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-bold">€ 0.00</span></div><div id="listaOggi" class="mt-3 space-y-2 max-h-[300px] overflow-auto"></div></div></div>
 </div></div>
-<div id="tab-carico" class="tab-page hidden"><div class="grid grid-cols-12 gap-4"><div class="col-span-12 lg:col-span-6 space-y-4"><div class="bg-white rounded-2xl border p-5"><h2 class="font-black text-[13px]">CARICO PISTOLA - QUANTITA OBBLIGATORIA</h2><div class="mt-3 bg-black rounded-xl p-3 border-2 border-orange-400"><input id="pistolaCarico" placeholder="SPARA CODICE DA CARICARE" class="w-full bg-zinc-900 text-white border-2 border-orange-400 rounded-xl px-4 py-4 font-mono font-black text-[18px] text-center outline-none"><p class="text-[10px] text-orange-300 font-bold mt-2 text-center">Spari -> si apre finestra e devi mettere QUANTI pezzi sono arrivati</p></div></div><div class="bg-slate-900 text-white rounded-2xl p-5"><h2 class="font-black text-[13px]">CARICA PDF LOGISTA</h2><p class="text-[11px] text-slate-400 mt-1">Formato tuo: CODICE 10 cifre + KG. 0,200=10pz</p><div class="mt-3 bg-white/10 border-2 border-dashed border-white/20 rounded-xl p-5 text-center"><input type="file" id="pdfInput" accept=".pdf" class="hidden" onchange="handlePDF(this)"><button onclick="document.getElementById('pdfInput').click()" class="bg-yellow-400 text-black rounded-xl px-6 py-2.5 font-black text-[12px]">SELEZIONA PDF</button><p id="pdfStatus" class="text-[11px] mt-2 text-slate-300">Nessun file</p></div><div id="pdfPreview" class="hidden mt-3 bg-white text-slate-900 rounded-xl p-3 max-h-[350px] overflow-auto"></div><div id="pdfActions" class="hidden mt-3 grid grid-cols-2 gap-2"><button onclick="confermaCaricoPDF()" class="bg-emerald-500 text-white rounded-xl py-3 font-black text-[11px]">CONFERMA SU SUPABASE</button><button onclick="annullaPDF()" class="bg-white/10 border rounded-xl py-3 font-bold text-[11px]">ANNULLA</button></div></div></div><div class="col-span-12 lg:col-span-6 bg-white rounded-2xl border p-5"><h3 class="font-black text-[11px]">CARICO MANUALE</h3><div class="grid grid-cols-2 gap-2 mt-3"><input id="newMarca" placeholder="Marca" class="border-2 rounded-xl px-3 py-2.5 text-[11px] font-bold"><input id="newNome" placeholder="Nome" class="border-2 rounded-xl px-3 py-2.5 text-[11px] font-bold"><input id="newPrezzo" type="number" placeholder="Prezzo" class="border-2 rounded-xl px-3 py-2.5 text-[11px]"><input id="newQty" type="number" placeholder="Qtà OBBLIGATORIA" class="border-2 rounded-xl px-3 py-2.5 text-[11px]"><input id="newBarcode" placeholder="Barcode" class="col-span-2 border-2 rounded-xl px-3 py-2.5 font-mono text-[11px]"></div><button onclick="addNewProduct()" class="mt-3 w-full bg-slate-900 text-white rounded-xl py-3 font-bold text-[12px]">AGGIUNGI SU SUPABASE</button><input id="searchInv2" oninput="renderAll()" placeholder="Cerca..." class="mt-5 w-full border-2 rounded-xl px-4 py-2.5 text-[11px]"><div id="inventoryList2" class="mt-3 space-y-2 max-h-[400px] overflow-auto"></div></div></div></div>
+<div id="tab-carico" class="tab-page hidden"><div class="grid grid-cols-12 gap-4"><div class="col-span-12 lg:col-span-6 space-y-4"><div class="bg-white rounded-2xl border p-5"><h2 class="font-black text-[13px]">CARICO PISTOLA - QUANTITA OBBLIGATORIA</h2><div class="mt-3 bg-black rounded-xl p-3 border-2 border-orange-400"><input id="pistolaCarico" placeholder="SPARA CODICE DA CARICARE" class="w-full bg-zinc-900 text-white border-2 border-orange-400 rounded-xl px-4 py-4 font-mono font-black text-[18px] text-center outline-none"><p class="text-[10px] text-orange-300 font-bold mt-2 text-center">Spari -> si apre finestra e devi mettere QUANTI pezzi sono arrivati</p></div></div><div class="bg-slate-900 text-white rounded-2xl p-5"><h2 class="font-black text-[13px]">CARICA PDF LOGISTA</h2><p class="text-[11px] text-slate-400 mt-1">Formato tuo: CODICE 10 cifre + KG. 0,200=10pz</p><div class="mt-3 bg-white/10 border-2 border-dashed border-white/20 rounded-xl p-5 text-center"><input type="file" id="pdfInput" accept=".pdf" class="hidden" onchange="handlePDF(this)"><button onclick="document.getElementById('pdfInput').click()" class="bg-yellow-400 text-black rounded-xl px-6 py-2.5 font-black text-[12px]">SELEZIONA PDF</button><p id="pdfStatus" class="text-[11px] mt-2 text-slate-300">Nessun file</p></div><div id="pdfPreview" class="hidden mt-3 bg-white text-slate-900 rounded-xl p-3 max-h-[350px] overflow-auto"></div><div id="pdfActions" class="hidden mt-3 grid grid-cols-2 gap-2"><button onclick="confermaCaricoPDF()" class="bg-emerald-500 text-white rounded-xl py-3 font-black text-[11px]">CONFERMA SU SUPABASE</button><button onclick="annullaPDF()" class="bg-white/10 border rounded-xl py-3 font-bold text-[11px]">ANNULLA</button></div></div></div><div class="col-span-12 lg:col-span-6 bg-white rounded-2xl border p-5"><h3 class="font-black text-[11px]">CARICO MANUALE</h3><div class="grid grid-cols-2 gap-2 mt-3"><input id="newMarca" placeholder="Marca" class="border-2 rounded-xl px-3 py-2.5 text-[11px] font-bold"><input id="newNome" placeholder="Nome" class="border-2 rounded-xl px-3 py-2.5 text-[11px] font-bold"><input id="newPrezzo" readonly onclick="openNumpad('newPrezzo','PREZZO €')" placeholder="Prezzo" class="border-2 rounded-xl px-3 py-2.5 text-[11px] bg-yellow-50"><input id="newQty" readonly onclick="openNumpad('newQty','QTÀ OBBLIGATORIA')" placeholder="Qtà" class="border-2 rounded-xl px-3 py-2.5 text-[11px] bg-yellow-50"><input id="newBarcode" placeholder="Barcode" class="col-span-2 border-2 rounded-xl px-3 py-2.5 font-mono text-[11px]"></div><button onclick="addNewProduct()" class="mt-3 w-full bg-slate-900 text-white rounded-xl py-3 font-bold text-[12px]">AGGIUNGI SU SUPABASE</button><input id="searchInv2" oninput="renderAll()" placeholder="Cerca..." class="mt-5 w-full border-2 rounded-xl px-4 py-2.5 text-[11px]"><div id="inventoryList2" class="mt-3 space-y-2 max-h-[400px] overflow-auto"></div></div></div></div>
 <div id="tab-report" class="tab-page hidden"><div class="grid grid-cols-2 gap-3"><div class="bg-white border rounded-2xl p-4"><p class="text-[10px] font-bold text-slate-500">INCASSO OGGI</p><p id="kpiOggi" class="font-black text-[22px] mt-1">€ 0.00</p></div><div class="bg-white border rounded-2xl p-4"><p class="text-[10px] font-bold text-slate-500">PEZZI OGGI</p><p id="kpiQtyOggi" class="font-black text-[22px] mt-1">0</p></div><div class="bg-slate-900 text-white rounded-2xl p-4"><p class="text-[10px] text-slate-400">TOTALE STORICO</p><p id="kpiTotale" class="font-black text-[22px] mt-1">€ 0.00</p></div><div class="bg-yellow-400 border-2 border-yellow-500 rounded-2xl p-4"><p class="text-[10px] font-black">VALORE MAGAZZINO</p><p id="kpiMagazzino" class="font-black text-[22px] mt-1">€ 0.00</p></div></div><div class="mt-4 bg-white rounded-2xl border p-5"><div class="flex gap-2 flex-wrap"><input type="date" id="filterDate" class="border-2 rounded-xl px-3 py-2 text-[11px]"><select id="filterPay" class="border-2 rounded-xl px-3 py-2 text-[11px]"><option value="">Tutti</option><option value="contanti">Contanti</option><option value="carta">Carta</option></select><button onclick="renderReports()" class="bg-slate-900 text-white rounded-xl px-4 py-2 font-bold text-[11px]">FILTRA</button><button onclick="exportCSV()" class="bg-white border-2 rounded-xl px-4 py-2 font-bold text-[11px]">CSV</button></div><div id="reportList" class="mt-4 space-y-2"></div></div></div>
 <div id="tab-mag" class="tab-page hidden"><div class="bg-white rounded-2xl border p-5"><div class="flex flex-wrap justify-between items-center gap-2"><h3 class="font-black text-[13px]">MAGAZZINO SUPABASE</h3><div class="flex gap-2 flex-wrap"><button onclick="backupDati()" class="bg-emerald-500 text-white px-4 py-2 rounded-xl font-black text-[10px]">💾 BACKUP</button><button onclick="document.getElementById('restoreInput').click()" class="bg-white border-2 border-slate-900 px-4 py-2 rounded-xl font-black text-[10px]">♻️ RIPRISTINA</button><input id="restoreInput" type="file" accept="application/json,.json" class="hidden" onchange="restoreDati(this)"><button onclick="openScorteModal()" class="bg-white border-2 border-slate-900 px-4 py-2 rounded-xl font-black text-[10px]">⚙️ SCORTE</button><button onclick="openOrdineModal()" class="bg-yellow-400 border-2 border-yellow-500 px-4 py-2 rounded-xl font-black text-[10px]">📦 ORDINARE</button><span id="totPezzi" class="bg-slate-900 text-white px-3 py-2 rounded-full text-[10px] font-bold">0 pz</span></div></div><input id="searchInv" oninput="renderAll()" placeholder="Cerca..." class="mt-3 w-full bg-slate-50 border-2 rounded-xl px-4 py-3 font-bold text-[11px]"><div id="inventoryList" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2"></div></div></div>
 </main>
@@ -77,6 +107,34 @@ function getStoredJSON(key,fallback){try{const raw=localStorage.getItem(key);ret
 let inventory=[];let sales=getStoredJSON(APP_DATA_KEYS.sales,[]);let scorte=getStoredJSON(APP_DATA_KEYS.scorte,{});
 let carrello=[];let payment='contanti';let pendingCode=null;let lastCode=null;let lastTime=0;const COOLDOWN=800;
 let pendingCaricoPistolaCode=null;
+let activeNumpadInput=null; let numpadBuffer="";
+function openNumpad(id,label){
+  activeNumpadInput=document.getElementById(id);
+  numpadBuffer=activeNumpadInput.value||"";
+  document.getElementById('numpadDisplay').innerText=numpadBuffer||"0";
+  document.getElementById('numpadLabel').innerText=label||"INSERISCI NUMERO";
+  document.getElementById('customNumpad').classList.remove('hidden');
+}
+function closeNumpad(){document.getElementById('customNumpad').classList.add('hidden'); activeNumpadInput=null;}
+function numpadPress(d){
+  if(d==='.' && numpadBuffer.includes('.')) return;
+  if(numpadBuffer.length>=6) return;
+  if(numpadBuffer==="0" && d!==".") numpadBuffer=d; else numpadBuffer+=d;
+  document.getElementById('numpadDisplay').innerText=numpadBuffer;
+}
+function numpadClear(){numpadBuffer=""; document.getElementById('numpadDisplay').innerText="0";}
+function numpadDel(){numpadBuffer=numpadBuffer.slice(0,-1); document.getElementById('numpadDisplay').innerText=numpadBuffer||"0";}
+function numpadOk(){
+  if(activeNumpadInput){
+    activeNumpadInput.value=numpadBuffer;
+    activeNumpadInput.dispatchEvent(new Event('input'));
+    activeNumpadInput.dispatchEvent(new Event('change'));
+  }
+  let isCaricoPistola = activeNumpadInput && activeNumpadInput.id==='pCaricoQty';
+  let buf = numpadBuffer;
+  closeNumpad();
+  if(isCaricoPistola && buf){ confermaPistolaCarico(); }
+}
 function getScorta(c){if(scorte[c]===undefined)scorte[c]=20;return scorte[c];}
 function saveScorte(){localStorage.setItem(APP_DATA_KEYS.scorte,JSON.stringify(scorte));}
 async function loadInventory(){
@@ -100,13 +158,12 @@ async function updateQtySupabase(barcode, nuovaQty){
 async function insertProductSupabase(prod){
   try{ const { error } = await supa.from('prodotti').insert([{ barcode: prod.code, marca: prod.marca, nome: prod.nome, prezzo: prod.prezzo, quantita: prod.qty }]); if(error) throw error; }catch(e){ alert('Errore INSERT: '+e.message); }
 }
-function saveLocal(){ localStorage.setItem(APP_DATA_KEYS.sales, JSON.stringify(sales)); saveScorte(); }
+function saveLocal(){ localStorage.setItem(APP_DATA_KEYS.sales, JSON.stringify(sales)); saveScorte(); localStorage.setItem(APP_DATA_KEYS.inventory, JSON.stringify(inventory)); }
 function openTab(n){const p=['carico','report','mag'];if(p.includes(n)&&sessionStorage.getItem('admin_ok')!=='1'){window.pendingTab=n;document.getElementById('passAreaName').innerText=n.toUpperCase();document.getElementById('passModal').classList.remove('hidden');document.getElementById('passInput').value='';document.getElementById('passError').classList.add('hidden');document.getElementById('passInput').focus();return;}document.querySelectorAll('.tab-page').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+n).classList.remove('hidden');document.querySelectorAll('[id^="b-"]').forEach(b=>{b.className='bg-white border-2 px-5 py-2.5 rounded-xl font-bold text-[11px]';});document.getElementById('b-'+n).className='bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-[11px]';if(n==='cassa') setTimeout(()=>document.getElementById('pistolaCassa')?.focus(),100); if(n==='carico') setTimeout(()=>document.getElementById('pistolaCarico')?.focus(),100); renderAll();}
 function checkPass(){const i=document.getElementById('passInput').value.trim();if(i==='80939184'){sessionStorage.setItem('admin_ok','1');document.getElementById('passModal').classList.add('hidden');if(window.pendingTab){openTab(window.pendingTab);window.pendingTab=null;}}else{document.getElementById('passError').classList.remove('hidden');document.getElementById('passInput').value='';}}
 function closePassModal(){document.getElementById('passModal').classList.add('hidden');}
 function todayStr(){return new Date().toISOString().split('T')[0];}
 function findProd(c){c=c.trim().toUpperCase();return inventory.find(i=>i.code.toUpperCase()===c) || inventory.find(i=>c.includes(i.code.toUpperCase())) || null;}
-// FIX CASSA: NO isPaused per cassa, così bottoni restano cliccabili
 function handleScan(code,mode){
   code=code.trim().toUpperCase();
   const now=Date.now();
@@ -138,12 +195,11 @@ function apriPistolaCarico(code){
   document.getElementById('pCaricoStock').innerText=`Giacenza attuale: ${prod.qty} pz`;
   document.getElementById('pCaricoQty').value='';
   document.getElementById('pistolaCaricoModal').classList.remove('hidden');
-  setTimeout(()=>document.getElementById('pCaricoQty').focus(),100);
 }
 function chiudiPistolaCarico(){document.getElementById('pistolaCaricoModal').classList.add('hidden');pendingCaricoPistolaCode=null;document.getElementById('pistolaCarico').focus();}
 async function confermaPistolaCarico(){
   let qty=parseInt(document.getElementById('pCaricoQty').value);
-  if(!qty||qty<=0){alert('DEVI inserire quantità!');return;}
+  if(!qty||qty<=0){alert('DEVI inserire quantità!');openNumpad('pCaricoQty','QUANTI PEZZI?');return;}
   let prod=inventory.find(p=>p.code===pendingCaricoPistolaCode);
   let nuova=prod.qty+qty;
   await updateQtySupabase(prod.code, nuova);
@@ -163,8 +219,29 @@ function renderCatalog(){const g=document.getElementById('catalogoGrid');if(!g)r
 function renderCart(){const c=document.getElementById('carrello');c.innerHTML='';let tot=0,pz=0;if(carrello.length===0)c.innerHTML='<p class="opacity-40 text-center py-8 text-[11px]">Carrello vuoto - spara con pistola</p>';carrello.forEach((it,idx)=>{tot+=it.prezzo*it.qty;pz+=it.qty;c.innerHTML+=`<div class="bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 flex justify-between items-center"><div><p class="font-bold text-[11px]">${it.marca} ${it.nome}</p><p class="font-mono text-[9px] text-slate-400">${it.code} x${it.qty}</p></div><span class="font-bold text-[12px]">€ ${(it.prezzo*it.qty).toFixed(2)} <button onclick="carrello.splice(${idx},1);renderAll()" class="bg-white/20 w-5 h-5 rounded-full ml-2">×</button></span></div>`;});document.getElementById('totale').innerText='€ '+tot.toFixed(2);document.getElementById('pezziCarrello').innerText=pz+' pz';}
 function renderOggi(){let today=todayStr();let todaySales=sales.filter(s=>s.date===today);let tot=todaySales.reduce((s,x)=>s+x.totale,0);let list=document.getElementById('listaOggi');if(list){list.innerHTML='';todaySales.slice(0,10).forEach(s=>{list.innerHTML+=`<div class="bg-slate-50 border rounded-xl px-3 py-2 flex justify-between text-[11px]"><span>${s.time}</span><span class="font-bold">€ ${s.totale.toFixed(2)}</span></div>`;});}document.getElementById('oggiTot').innerText='€ '+tot.toFixed(2);}
 function renderInv(){let q=((document.getElementById('searchInv')?.value||'')+(document.getElementById('searchInv2')?.value||'')).toLowerCase();let filtered=inventory.filter(p=>(p.marca+' '+p.nome+' '+p.code).toLowerCase().includes(q));let list=document.getElementById('inventoryList');let list2=document.getElementById('inventoryList2');if(list){list.innerHTML='';filtered.forEach(p=>{let sc=getScorta(p.code);list.innerHTML+=`<div class="bg-slate-50 border rounded-xl p-3 flex justify-between items-center"><div><p class="font-bold text-[11px]">${p.marca} ${p.nome}</p><p class="font-mono text-[9px] text-slate-500">${p.code} • Scorta:${sc} • Giac:${p.qty}</p></div><div class="flex gap-1 items-center"><span class="font-black w-7 text-center text-[12px]">${p.qty}</span><button onclick="editQty('${p.code}',1)" class="w-7 h-7 bg-slate-900 text-white rounded-full font-bold">+</button><button onclick="editQty('${p.code}',-1)" class="w-7 h-7 bg-white border-2 rounded-full font-bold">-</button></div></div>`;});}if(list2){list2.innerHTML='';filtered.forEach(p=>{list2.innerHTML+=`<div class="border rounded-xl p-2.5 flex justify-between text-[11px] bg-slate-50"><span class="font-bold">${p.marca} ${p.nome}</span><span>${p.qty} pz</span></div>`;});}document.getElementById('totPezzi').innerText=inventory.reduce((s,p)=>s+p.qty,0)+' pz';}
+function renderScorteModal(){
+  let q=(document.getElementById('searchScorte')?.value||'').toLowerCase();
+  let list=document.getElementById('scorteList'); if(!list) return;
+  list.innerHTML=''; inventory.filter(p=>(p.marca+' '+p.nome+' '+p.code).toLowerCase().includes(q)).forEach(p=>{
+    let sc=getScorta(p.code);
+    list.innerHTML+=`<div class="flex justify-between items-center bg-slate-50 border rounded-xl p-2"><span class="text-[11px] font-bold">${p.marca} ${p.nome}</span><div class="flex items-center gap-1"><button onclick="scorte['${p.code}']=${Math.max(0,${sc}-1)};saveScorte();renderScorteModal();renderAll()" class="w-7 h-7 bg-white border-2 rounded-full">-</button><span class="w-8 text-center font-black text-[12px]">${sc}</span><button onclick="scorte['${p.code}']=${sc+1};saveScorte();renderScorteModal();renderAll()" class="w-7 h-7 bg-slate-900 text-white rounded-full">+</button></div></div>`;
+  });
+}
+function renderOrdine(){
+  let list=document.getElementById('ordineList'); let summary=document.getElementById('ordineSummary'); if(!list) return;
+  list.innerHTML=''; let daOrdinare=[];
+  inventory.forEach(p=>{
+    let sc=getScorta(p.code); let diff=sc-p.qty; if(diff>5){
+      let stecche=Math.ceil(Math.min(diff, sc+5)/10); daOrdinare.push({p, diff, stecche});
+    }
+  });
+  if(summary) summary.innerHTML=`<div class="bg-white border rounded-xl p-2 text-center"><p class="text-[10px] font-bold text-slate-500">DA ORDINARE</p><p class="font-black text-[16px]">${daOrdinare.length}</p></div><div class="bg-white border rounded-xl p-2 text-center"><p class="text-[10px] font-bold text-slate-500">STECCHE</p><p class="font-black text-[16px]">${daOrdinare.reduce((s,x)=>s+x.stecche,0)}</p></div><div class="bg-yellow-100 border rounded-xl p-2 text-center"><p class="text-[10px] font-bold">VALORE</p><p class="font-black text-[16px]">€ ${(daOrdinare.reduce((s,x)=>s+x.p.prezzo*x.diff,0)).toFixed(0)}</p></div>`;
+  daOrdinare.forEach(o=>{
+    list.innerHTML+=`<div class="bg-slate-50 border rounded-xl p-3 flex justify-between"><div><p class="font-bold text-[11px]">${o.p.marca} ${o.p.nome}</p><p class="font-mono text-[9px]">${o.p.code} • Giac:${o.p.qty} Scorta:${getScorta(o.p.code)} Manca:${o.diff}</p></div><span class="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-bold h-fit">${o.stecche} stecche</span></div>`;
+  });
+}
 function renderReports(){document.getElementById('kpiTotale').innerText='€ '+sales.reduce((s,x)=>s+x.totale,0).toFixed(2);document.getElementById('kpiOggi').innerText='€ '+sales.filter(s=>s.date===todayStr()).reduce((s,x)=>s+x.totale,0).toFixed(2);document.getElementById('kpiQtyOggi').innerText=sales.filter(s=>s.date===todayStr()).reduce((s,x)=>s+x.items.reduce((a,b)=>a+b.qty,0),0);document.getElementById('kpiMagazzino').innerText='€ '+inventory.reduce((s,p)=>s+p.qty*p.prezzo,0).toFixed(2);let div=document.getElementById('reportList');if(!div)return;div.innerHTML='';sales.slice(0,20).forEach(s=>{div.innerHTML+=`<div class="bg-slate-50 border rounded-xl p-3 flex justify-between"><div><span class="font-mono text-[9px] bg-white border px-2 py-1 rounded-full">${s.date} ${s.time}</span><p class="text-[11px] font-bold mt-1">${s.items.map(i=>i.marca+' x'+i.qty).join(' • ')}</p></div><div class="font-bold text-[11px]">€ ${s.totale.toFixed(2)}</div></div>`;});}
-function renderAll(){renderCatalog();renderCart();renderOggi();renderInv();renderReports();}
+function renderAll(){renderCatalog();renderCart();renderOggi();renderInv();renderReports();renderScorteModal();renderOrdine();}
 async function editQty(c,d){let p=inventory.find(x=>x.code===c);if(p){let nuova=Math.max(0,p.qty+d);await updateQtySupabase(p.code, nuova);p.qty=nuova;renderAll();}}
 async function addNewProduct(){let marca=document.getElementById('newMarca').value,nome=document.getElementById('newNome').value,prezzo=parseFloat(document.getElementById('newPrezzo').value),qty=parseInt(document.getElementById('newQty').value),barcode=document.getElementById('newBarcode').value.toUpperCase()||marca+'-'+nome;if(!marca||!nome||!prezzo||!qty){alert('Compila marca,nome,prezzo e qtà');return;}let ex=inventory.find(x=>x.code.toUpperCase()===barcode.toUpperCase());if(ex){let nuova=ex.qty+qty;await updateQtySupabase(ex.code, nuova);ex.qty+=qty;}else{let np={code:barcode,marca:marca,nome:nome,prezzo:prezzo,qty:qty};await insertProductSupabase(np);inventory.push(np);scorte[barcode]=20;}saveLocal();renderAll();await loadInventory();}
 function setPay(m){
@@ -185,17 +262,19 @@ function setPay(m){
 }
 async function finalizza(){if(carrello.length===0){alert('Carrello vuoto, spara prima!');return;}let tot=carrello.reduce((s,i)=>s+i.prezzo*i.qty,0);for(let it of carrello){let inv=inventory.find(x=>x.code===it.code);if(inv){let nuova=inv.qty-it.qty;await updateQtySupabase(inv.code, nuova);inv.qty=nuova;}}sales.unshift({id:Date.now(),date:todayStr(),time:new Date().toLocaleTimeString('it-IT'),items:[...carrello],totale:tot,payment:payment});carrello=[];saveLocal();renderAll();alert('✅ Vendita salvata su Supabase! Tot: €'+tot.toFixed(2));}
 function exportCSV(){let csv='data,ora,codici,totale,pagamento\n';sales.forEach(s=>{csv+=`${s.date},${s.time},"${s.items.map(i=>i.code).join(';')}",${s.totale},${s.payment}\n`;});let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='resoconto.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+function exportOrdineCSV(){let csv='marca,nome,barcode,giacenza,scorta,mancanza,stecche\n';inventory.forEach(p=>{let sc=getScorta(p.code);let diff=sc-p.qty; if(diff>5){let stecche=Math.ceil(Math.min(diff,sc+5)/10); csv+=`${p.marca},${p.nome},${p.code},${p.qty},${sc},${diff},${stecche}\n`;}});let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='ordine.csv';a.click();}
 function manualAdd(){let code=document.getElementById('manualCode').value.trim();if(!code)return;lastCode=null;handleScan(code,'cassa');document.getElementById('manualCode').value='';}
-function backupDati(){}
-function openScorteModal(){document.getElementById('scorteModal').classList.remove('hidden');}
+function backupDati(){let d=JSON.stringify({inventory,sales,scorte});let b=new Blob([d],{type:'application/json'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='backup-'+todayStr()+'.json';a.click();}
+function restoreDati(inp){let f=inp.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{try{let o=JSON.parse(e.target.result); if(o.inventory) inventory=o.inventory; if(o.sales) sales=o.sales; if(o.scorte) scorte=o.scorte; saveLocal(); renderAll(); alert('Ripristinato!');}catch(err){alert('File non valido');}}; r.readAsText(f);}
+function openScorteModal(){document.getElementById('scorteModal').classList.remove('hidden');renderScorteModal();}
 function closeScorteModal(){document.getElementById('scorteModal').classList.add('hidden');renderAll();}
-function openOrdineModal(){document.getElementById('ordineModal').classList.remove('hidden');}
+function openOrdineModal(){document.getElementById('ordineModal').classList.remove('hidden');renderOrdine();}
 function closeOrdineModal(){document.getElementById('ordineModal').classList.add('hidden');}
-function exportOrdineCSV(){}
-function handlePDF(){}
+function handlePDF(){alert('PDF Logista ancora da implementare in V9.2 - usa carico pistola per ora');}
+function annullaPDF(){}
+function confermaCaricoPDF(){}
 document.getElementById('pistolaCassa').addEventListener('keydown', e=>{if(e.key==='Enter' && e.target.value.trim().length>=3){e.preventDefault();handleScan(e.target.value.trim(),'cassa');e.target.value='';}});
 document.getElementById('pistolaCarico').addEventListener('keydown', e=>{if(e.key==='Enter' && e.target.value.trim().length>=3){e.preventDefault();let code=e.target.value.trim();e.target.value='';let prod=findProd(code);if(prod)apriPistolaCarico(prod.code);}});
-document.getElementById('pCaricoQty').addEventListener('keydown', e=>{if(e.key==='Enter')confermaPistolaCarico();});
 document.getElementById('passInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')checkPass();});
 loadInventory();setPay('contanti');
 </script>
