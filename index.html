@@ -167,7 +167,22 @@ function renderReports(){document.getElementById('kpiTotale').innerText='€ '+s
 function renderAll(){renderCatalog();renderCart();renderOggi();renderInv();renderReports();}
 async function editQty(c,d){let p=inventory.find(x=>x.code===c);if(p){let nuova=Math.max(0,p.qty+d);await updateQtySupabase(p.code, nuova);p.qty=nuova;renderAll();}}
 async function addNewProduct(){let marca=document.getElementById('newMarca').value,nome=document.getElementById('newNome').value,prezzo=parseFloat(document.getElementById('newPrezzo').value),qty=parseInt(document.getElementById('newQty').value),barcode=document.getElementById('newBarcode').value.toUpperCase()||marca+'-'+nome;if(!marca||!nome||!prezzo||!qty){alert('Compila marca,nome,prezzo e qtà');return;}let ex=inventory.find(x=>x.code.toUpperCase()===barcode.toUpperCase());if(ex){let nuova=ex.qty+qty;await updateQtySupabase(ex.code, nuova);ex.qty+=qty;}else{let np={code:barcode,marca:marca,nome:nome,prezzo:prezzo,qty:qty};await insertProductSupabase(np);inventory.push(np);scorte[barcode]=20;}saveLocal();renderAll();await loadInventory();}
-function setPay(m){payment=m;document.getElementById('payContanti').className=m==='contanti'?'bg-slate-900 text-white rounded-xl py-2.5 font-bold text-[11px]':'bg-white/10 border rounded-xl py-2.5 font-bold text-[11px] text-white';document.getElementById('payCarta').className=m==='carta'?'bg-white text-slate-900 rounded-xl py-2.5 font-bold text-[11px]':'bg-white/10 border rounded-xl py-2.5 font-bold text-[11px] text-white';}
+function setPay(m){
+  payment=m;
+  const btnC=document.getElementById('payContanti');
+  const btnP=document.getElementById('payCarta');
+  if(m==='contanti'){
+    btnC.className='bg-emerald-400 text-black ring-4 ring-emerald-200 rounded-xl py-3.5 font-black text-[13px] scale-105 shadow-lg';
+    btnC.innerHTML='✅ CONTANTI';
+    btnP.className='bg-white/10 border border-white/20 text-white/40 rounded-xl py-2.5 font-bold text-[11px]';
+    btnP.innerHTML='💳 CARTA';
+  }else{
+    btnP.className='bg-white text-slate-900 ring-4 ring-white/50 rounded-xl py-3.5 font-black text-[13px] scale-105 shadow-lg';
+    btnP.innerHTML='✅ CARTA';
+    btnC.className='bg-white/10 border border-white/20 text-white/40 rounded-xl py-2.5 font-bold text-[11px]';
+    btnC.innerHTML='💵 CONTANTI';
+  }
+}
 async function finalizza(){if(carrello.length===0){alert('Carrello vuoto, spara prima!');return;}let tot=carrello.reduce((s,i)=>s+i.prezzo*i.qty,0);for(let it of carrello){let inv=inventory.find(x=>x.code===it.code);if(inv){let nuova=inv.qty-it.qty;await updateQtySupabase(inv.code, nuova);inv.qty=nuova;}}sales.unshift({id:Date.now(),date:todayStr(),time:new Date().toLocaleTimeString('it-IT'),items:[...carrello],totale:tot,payment:payment});carrello=[];saveLocal();renderAll();alert('✅ Vendita salvata su Supabase! Tot: €'+tot.toFixed(2));}
 function exportCSV(){let csv='data,ora,codici,totale,pagamento\n';sales.forEach(s=>{csv+=`${s.date},${s.time},"${s.items.map(i=>i.code).join(';')}",${s.totale},${s.payment}\n`;});let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='resoconto.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function manualAdd(){let code=document.getElementById('manualCode').value.trim();if(!code)return;lastCode=null;handleScan(code,'cassa');document.getElementById('manualCode').value='';}
