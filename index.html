@@ -272,38 +272,55 @@ function closeScorteModal(){document.getElementById('scorteModal').classList.add
 function openOrdineModal(){document.getElementById('ordineModal').classList.remove('hidden');renderOrdine();}
 function closeOrdineModal(){document.getElementById('ordineModal').classList.add('hidden');}
 
-// === FIX PDF LOGISTA V9.2 - SOLO QUESTE 3 FUNZIONI CAMBIATE ===
+let pdfParsedData=[];
+
+// === FIX PDF LOGISTA V9.2 - PARSER REALE PER TUO PDF ===
 async function handlePDF(input){
   let file=input.files[0]; if(!file) return;
   document.getElementById('pdfStatus').innerText='⏳ Leggo PDF...';
   document.getElementById('pdfPreview').classList.remove('hidden');
-  document.getElementById('pdfPreview').innerHTML='<p class="text-[11px]">Lettura in corso...</p>';
+  document.getElementById('pdfPreview').innerHTML='<p class="text-[11px]">Lettura...</p>';
   try{
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const buffer=await file.arrayBuffer();
     const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
-    let fullText='';
-    for(let i=1;i<=pdf.numPages;i++){let page=await pdf.getPage(i); let content=await page.getTextContent(); fullText+=content.items.map(it=>it.str).join(' ')+' \n';}
+    let lines=[];
+    for(let i=1;i<=pdf.numPages;i++){
+      let page=await pdf.getPage(i);
+      let content=await page.getTextContent();
+      // Uniamo tutti i testi con \n per mantenere le righe del tuo PDF Logista
+      let pageLines=content.items.map(it=>it.str.trim()).filter(s=>s.length>0);
+      lines=lines.concat(pageLines);
+    }
+
     pdfParsedData=[];
-    let regex=/(\d{8,10})\D+(\d+[,\.]\d+)\s*KG/gi; let m;
-    while((m=regex.exec(fullText))!==null){
-      let code=m[1].slice(-8); let kg=parseFloat(m[2].replace(',','.')); let qty=Math.round(kg/0.02);
-      if(qty>0 && qty<1000) pdfParsedData.push({code:code, fullCode:m[1], kg:kg, qty:qty});
+    // Il tuo PDF ha: 1000410370 (riga 1), DESCRIZIONE (riga 2), 0,500 (riga 3)
+    for(let i=0;i<lines.length-2;i++){
+      if(/^\d{10}$/.test(lines[i])){
+        let code10=lines[i];
+        let descr=lines[i+1];
+        let kgStr=lines[i+2];
+        if(/^\d+,\d+$/.test(kgStr)){
+          let kg=parseFloat(kgStr.replace(',','.'));
+          let qty=Math.round(kg/0.02); // tu mi hai detto 0,200 = 10pz
+          if(qty>0 && qty<1000){
+            let code8=code10.slice(-8); // tu usi 8 cifre nel sistema tipo 80939184
+            pdfParsedData.push({code:code8, fullCode:code10, descr:descr, kg:kg, qty:qty});
+            i+=2; // salta le 2 righe già usate
+          }
+        }
+      }
     }
-    if(pdfParsedData.length===0){
-      let regex2=/(\d{8,10})\s+(\d{1,3})\b/g;
-      while((m=regex2.exec(fullText))!==null){let code=m[1].slice(-8); let qty=parseInt(m[2]); if(qty>0&&qty<500) pdfParsedData.push({code:code, fullCode:m[1], kg:qty*0.02, qty:qty});}
-    }
+
     document.getElementById('pdfStatus').innerText=`✅ Trovati ${pdfParsedData.length} articoli`;
-    let html=`<div class="text-[11px]"><p class="font-black mb-2">ANTEPRIMA PDF - ${pdfParsedData.length} righe</p>`; let tot=0;
-    pdfParsedData.forEach(r=>{tot+=r.qty; let p=findProd(r.code); let nome=p?`${p.marca} ${p.nome}`:'⚠️ NUOVO'; html+=`<div class="flex justify-between border-b py-1"><span class="font-mono">${r.code} - ${r.kg.toFixed(3)}kg</span><span>${r.qty} pz - ${nome}</span></div>`;});
-    html+=`<div class="font-black mt-2 pt-2 border-t">TOTALE: ${tot} pz</div></div>`;
+    let html=`<div class="text-[11px]"><p class="font-black mb-2">ANTEPRIMA PDF LOGISTA - ${pdfParsedData.length} righe</p>`; let tot=0;
+    pdfParsedData.forEach(r=>{tot+=r.qty; let p=findProd(r.code); let nome=p?`${p.marca} ${p.nome}`:`⚠️ NUOVO ${r.descr}`; html+=`<div class="flex justify-between border-b py-1.5"><div><span class="font-mono font-bold">${r.code}</span><span class="text-[9px] ml-2">${r.descr}</span><div class="text-[9px] text-slate-500">${r.kg.toFixed(3)} kg</div></div><span class="font-black">${r.qty} pz</span></div>`;});
+    html+=`<div class="font-black mt-2 pt-2 border-t text-[13px]">TOTALE: ${tot} pz</div></div>`;
     document.getElementById('pdfPreview').innerHTML=html;
     document.getElementById('pdfActions').classList.remove('hidden');
   }catch(e){
     document.getElementById('pdfStatus').innerText='❌ Errore: '+e.message;
-    document.getElementById('pdfPreview').innerHTML=`<p class="text-red-500 text-[11px]">${e.message}</p>`;
   }
 }
 function annullaPDF(){
@@ -320,8 +337,13 @@ async function confermaCaricoPDF(){
   for(let r of pdfParsedData){
     let prod=inventory.find(p=>p.code===r.code);
     if(prod){let nuova=prod.qty+r.qty; await updateQtySupabase(prod.code, nuova); prod.qty=nuova;}
-    else{let np={code:r.code, marca:'DA PDF', nome:r.fullCode, prezzo:6.50, qty:r.qty}; await insertProductSupabase(np); inventory.push(np); scorte[r.code]=20;}
+    else{let np={code:r.code, marca:r.descr.substring(0,20), nome:r.fullCode, prezzo:6.50, qty:r.qty}; await insertProductSupabase(np); inventory.push(np); scorte[r.code]=20;}
   }
+  saveLocal();
+  await loadInventory();
+  annullaPDF();
+  alert(`✅ Caricati ${pdfParsedData.length} articoli per ${pdfParsedData.reduce((s,x)=>s+x.qty,0)} pz su Supabase!`);
+}
   saveLocal();
   await loadInventory();
   annullaPDF();
