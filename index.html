@@ -173,7 +173,29 @@ function handleScan(code,mode){console.log("ARTICOLI IN MEMORIA:", inventory.len
   if(mode==='cassa'){
     let inv=inventory.find(i=>i.code===prod.code);
     if(!inv || inv.qty<=0){alert('Esaurito: '+prod.code);return;}
-    let inCart=carrello.find(c=>c.code===prod.code);
+    let inCart = carrello.find(c => c.code === prod.code);
+ 
+let qtyGiaNelCarrello = inCart ? inCart.qty : 0;
+ 
+if(qtyGiaNelCarrello >= inv.qty){
+alert(
+'Magazzino insufficiente!\n' +
+'Disponibili: ' + inv.qty + ' pz'
+);
+return;
+}
+ 
+if(inCart){
+inCart.qty++;
+}else{
+carrello.push({
+code:prod.code,
+marca:prod.marca,
+nome:prod.nome,
+prezzo:prod.prezzo,
+qty:1
+});
+}
     if(inCart) inCart.qty++; else carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1});
     renderAll();
     setTimeout(()=>{document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus();},50);
