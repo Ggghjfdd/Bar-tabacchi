@@ -109,7 +109,20 @@ function numpadOk(){
 }
 function getScorta(c){if(scorte[c]===undefined)scorte[c]=20;return scorte[c];}
 function saveScorte(){localStorage.setItem(APP_DATA_KEYS.scorte,JSON.stringify(scorte));}
-async function loadInventory(){document.getElementById('statusSupa').innerText='Collego Supabase...';try{const { data, error } = await supa.from('prodotti').select('*').order('marca');if(error) throw error;inventory = data.map(r=>({code:r.barcode, marca:r.marca, nome:r.nome, prezzo:parseFloat(r.prezzo), qty:r.quantita}));document.getElementById('statusSupa').innerText=inventory.length+' su Supabase';document.getElementById('statusSupa').className='bg-emerald-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';}catch(e){document.getElementById('statusSupa').innerText='Offline';document.getElementById('statusSupa').className='bg-red-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';inventory = getStoredJSON(APP_DATA_KEYS.inventory, []) || [];}renderAll();}
+async function loadInventory(){document.getElementById('statusSupa').innerText='Collego Supabase...';try{const { data, error } = await supa.from('prodotti').select('*').order('marca');if(error) throw error;inventory = data.map(r=>({code:r.barcode, marca:r.marca, nome:r.nome, prezzo:parseFloat(r.prezzo), qty:r.quantita}));document.getElementById('statusSupa').innerText=inventory.length+' su Supabase';document.getElementById('statusSupa').className='bg-emerald-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';}catch(e){
+ 
+console.error('ERRORE SUPABASE:', e);
+ 
+alert(
+'ERRORE SUPABASE:\n' +
+(e.message || JSON.stringify(e))
+);
+ 
+document.getElementById('statusSupa').innerText='Offline';
+document.getElementById('statusSupa').className='bg-red-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';
+ 
+inventory = getStoredJSON(APP_DATA_KEYS.inventory, []) || [];
+}renderAll();}
 async function updateQtySupabase(barcode, nuovaQty){try{ const { error } = await supa.from('prodotti').update({ quantita: nuovaQty }).eq('barcode', barcode); if(error) throw error; }catch(e){ alert('Errore UPDATE: '+e.message); }}
 async function insertProductSupabase(prod){try{ const { error } = await supa.from('prodotti').insert([{ barcode: prod.code, marca: prod.marca, nome: prod.nome, prezzo: prod.prezzo, quantita: prod.qty }]); if(error) throw error; }catch(e){ alert('Errore INSERT: '+e.message); }}
 function saveLocal(){ localStorage.setItem(APP_DATA_KEYS.sales, JSON.stringify(sales)); saveScorte(); localStorage.setItem(APP_DATA_KEYS.inventory, JSON.stringify(inventory)); }
