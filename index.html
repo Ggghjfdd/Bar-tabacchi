@@ -186,35 +186,47 @@ function todayStr(){return new Date().toISOString().split('T')[0];}
 function findProd(c){c=c.trim().toUpperCase();return inventory.find(i=>i.code.toUpperCase()===c) || inventory.find(i=>c.includes(i.code.toUpperCase())) || null;}
 
 function handleScan(code,mode){
-  code=code.trim().toUpperCase();
+  code=code.trim().toUpperCase().replace(/[^0-9A-Z]/g,'');
+  if(code.length < 3) return;
+
+  // --- FIX BLOCCO CARRELLO VUOTO ---
+  if(inventory.length===0){
+    document.getElementById('lastScan').innerText='ATTENDI CARICAMENTO MAGAZZINO...';
+    showWarning('Magazzino non ancora caricato da Supabase.\nAttendi 2 secondi e rispara.','CARICAMENTO');
+    // riprova a caricare
+    loadInventory();
+    return;
+  }
+
   const now=Date.now();
-  if(code===lastCode && (now-lastTime)<COOLDOWN) return;
+  if(code===lastCode && (now-lastTime)<300) return;
   lastCode=code; lastTime=now;
-  document.getElementById('lastScan').innerText='Letto: '+code;
+  
   let prod=findProd(code);
+  document.getElementById('lastScan').innerText='Letto: '+code + (prod ? ' -> '+prod.marca : ' -> NUOVO');
+
   if(!prod){
-    if(mode==='carico'){
-      openTab('cassa');
-      document.getElementById('lastScan').innerText='Nuovo in CARICO: '+code+' -> Crealo in CASSA';
-    }
+    if(mode==='carico') openTab('cassa');
     pendingCode=code;
     document.getElementById('newCodeDisplay').innerText=code;
     document.getElementById('newProductAlert').classList.remove('hidden');
     setTimeout(()=>{ openNumpad('npQty','QUANTITA'); },200);
     return;
   }
+
   if(mode==='cassa'){
     let inv=inventory.find(i=>i.code===prod.code);
-    if(!inv || inv.qty<=0){showStock('Prodotto esaurito:\n'+prod.code,'MAGAZZINO');return;}
+    if(!inv){ showStock('Prodotto non in magazzino','MAGAZZINO'); return; }
+    if(inv.qty<=0){showStock('Esaurito: '+prod.code,'ESAURITO');return;}
     let inCart=carrello.find(c=>c.code===prod.code);
-    let qtyGiaNelCarrello = inCart? inCart.qty : 0;
-    if(qtyGiaNelCarrello >= inv.qty){
-      showStock('Magazzino insufficiente!\nDisponibili: '+inv.qty+' pz','SCORTE');
+    let qtyGia = inCart? inCart.qty : 0;
+    if(qtyGia >= inv.qty){
+      showStock('Hai già '+qtyGia+' pz in carrello.\nDisponibili: '+inv.qty,'STOCK FINITO');
       return;
     }
-    if(inCart){inCart.qty++;} else {carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1});}
+    if(inCart){ inCart.qty++; } else { carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1}); }
     renderAll();
-    setTimeout(()=>{document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus();},50);
+    setTimeout(()=>{ document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus(); },50);
   }else{
     apriPistolaCarico(prod.code);
   }
