@@ -152,7 +152,7 @@ function closePassModal(){document.getElementById('passModal').classList.add('hi
 function todayStr(){return new Date().toISOString().split('T')[0];}
 function findProd(c){c=c.trim().toUpperCase();return inventory.find(i=>i.code.toUpperCase()===c) || inventory.find(i=>c.includes(i.code.toUpperCase())) || null;}
 
-function handleScan(code,mode){
+function handleScan(code,mode){console.log("ARTICOLI IN MEMORIA:", inventory.length);
   code=code.trim().toUpperCase();
   const now=Date.now();
   if(code===lastCode && (now-lastTime)<COOLDOWN) return;
