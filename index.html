@@ -11,13 +11,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0f172a">
-<title>Bar Tabacchi V9.6 CUSTOM ALERT</title>
-<link rel="manifest" href="./manifest.json?v=v9.6-alert">
-<link rel="icon" href="./icons/icon.svg?v=v9.6" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.6">
+<title>Bar Tabacchi V9.7 ANTI-BLOCCO</title>
+<link rel="manifest" href="./manifest.json?v=v9.7-antiblocco">
+<link rel="icon" href="./icons/icon.svg?v=v9.7" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.7">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-const APP_VERSION='v9.6-custom-alert';
+const APP_VERSION='v9.7-antiblocco-qta';
 if(localStorage.getItem('bt_ver')!==APP_VERSION){
  if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));}
  if('caches' in window){caches.keys().then(k=>k.forEach(c=>caches.delete(c)));}
@@ -35,7 +35,7 @@ if('serviceWorker' in navigator){
 <body>
 <header class="sticky top-0 z-50 bg-white border-b shadow-sm">
 <div class="bg-slate-900 px-4 py-3 flex justify-between items-center" style="padding-top:calc(12px + env(safe-area-inset-top))">
-<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.6</h1><p class="text-slate-400 text-[10px] font-bold">CUSTOM ALERT + QTA</p></div></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.7</h1><p class="text-slate-400 text-[10px] font-bold">ANTI-BLOCCO + QTA 2-MAX</p></div></div>
 <div id="statusSupa" class="bg-yellow-400 text-black px-3 py-1.5 rounded-full text-[10px] font-black">SUPABASE...</div>
 </div>
 <div class="px-3 py-2 flex gap-2 overflow-x-auto bg-white">
@@ -45,26 +45,21 @@ if('serviceWorker' in navigator){
 <button onclick="openTab('mag')" id="b-mag" class="bg-white border-2 px-5 py-2.5 rounded-xl font-bold text-[11px]">MAGAZZINO</button>
 </div>
 </header>
-
 <div id="venditaToast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-[500] bg-emerald-500 text-white rounded-2xl px-6 py-4 shadow-2xl border-4 border-white">
   <div class="flex items-center gap-3">
     <div class="w-10 h-10 bg-white text-emerald-500 rounded-full flex items-center justify-center text-2xl font-black">✓</div>
     <div><div class="font-black text-[15px]">VENDITA CONCLUSA</div><div id="venditaToastTotale" class="text-[11px] font-bold opacity-90"></div></div>
   </div>
 </div>
-
 <input id="cartQtyTemp" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
-
-<!-- CUSTOM ALERT PROFESSIONALE - SOSTITUISCE TUTTI GLI ALERT DI APPLE -->
 <div id="customAlert" class="hidden fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4" onclick="if(event.target.id==='customAlert') closeAlert()">
     <div class="bg-white rounded-[28px] p-7 max-w-[420px] w-full shadow-2xl border-4 border-black">
-        <div id="alertIcon" class="w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4">⚠️</div>
+        <div id="alertIcon" class="w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-orange-100">⚠️</div>
         <h3 id="alertTitle" class="text-[24px] font-black text-slate-900 leading-none">ATTENZIONE</h3>
         <p id="alertMessage" class="mt-4 text-[18px] font-bold text-slate-700 leading-relaxed whitespace-pre-line">Messaggio</p>
-        <button onclick="closeAlert()" class="w-full mt-6 bg-slate-900 text-white rounded-2xl py-4 text-[18px] font-black active:scale-95">OK CAPITO</button>
+        <button onclick="closeAlert()" class="w-full mt-6 bg-slate-900 text-white rounded-2xl py-4 text-[18px] font-black">OK CAPITO</button>
     </div>
 </div>
-
 <div id="customNumpad" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-end justify-center p-3" onclick="if(event.target.id==='customNumpad') closeNumpad()"><div class="bg-white rounded-[24px] w-full max-w-[360px] p-4 shadow-2xl border-4 border-black"><div class="flex justify-between items-center mb-3"><span id="numpadLabel" class="font-black text-[13px]">QUANTITA'</span><button onclick="closeNumpad()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button></div><div id="numpadDisplay" class="bg-black text-yellow-300 rounded-xl p-4 text-[40px] font-black text-center font-mono mb-3 tracking-widest">0</div><div class="grid grid-cols-3 gap-2"><button onclick="numpadPress('1')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">1</button><button onclick="numpadPress('2')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">2</button><button onclick="numpadPress('3')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">3</button><button onclick="numpadPress('4')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">4</button><button onclick="numpadPress('5')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">5</button><button onclick="numpadPress('6')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">6</button><button onclick="numpadPress('7')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">7</button><button onclick="numpadPress('8')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">8</button><button onclick="numpadPress('9')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">9</button><button onclick="numpadClear()" class="bg-red-500 text-white rounded-2xl py-6 font-black text-[16px]">C</button><button onclick="numpadPress('0')" class="bg-slate-900 text-white rounded-2xl py-6 font-black text-[24px]">0</button><button onclick="numpadDel()" class="bg-orange-400 text-black rounded-2xl py-6 font-black text-[22px]">⌫</button></div><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="numpadPress('.')" class="bg-white border-2 rounded-2xl py-4 font-black text-[20px]">.</button><button onclick="numpadOk()" class="bg-emerald-500 text-white rounded-2xl py-4 font-black text-[16px]">OK</button></div></div></div>
 <div id="passModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 max-w-[340px] w-full"><h3 class="text-[16px] font-black">Accesso Riservato</h3><p class="text-[12px] mt-2 text-slate-500">Password per <span id="passAreaName" class="font-black"></span></p><input id="passInput" type="password" placeholder="80939184" class="mt-4 w-full border-2 rounded-xl px-4 py-3 text-[16px] font-black text-center"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="checkPass()" class="bg-slate-900 text-white rounded-xl py-3 font-bold">SBLOCCA</button><button onclick="closePassModal()" class="bg-white border-2 rounded-xl py-3 font-bold">Annulla</button></div><p id="passError" class="hidden text-red-500 text-[12px] font-bold mt-2 text-center">Password errata</p></div></div>
 <div id="scorteModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-[700px] w-full max-h-[85vh] flex flex-col"><div class="p-5 border-b"><div class="flex justify-between"><div><h3 class="font-black">GESTISCI SCORTE</h3></div><button onclick="closeScorteModal()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button></div><input id="searchScorte" oninput="renderScorteModal()" placeholder="Cerca..." class="mt-3 w-full border-2 rounded-xl px-4 py-2.5 text-[12px] font-bold"></div><div id="scorteList" class="p-4 overflow-auto space-y-2 flex-1"></div><div class="p-4 border-t flex justify-end"><button onclick="closeScorteModal()" class="bg-slate-900 text-white rounded-xl px-6 py-3 font-bold text-[12px]">FATTO</button></div></div></div>
@@ -94,11 +89,10 @@ const supa = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const APP_DATA_KEYS={inventory:'bar_inv_v4',sales:'bar_sales_v4',scorte:'bar_scorte_v4'};
 function getStoredJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}catch(e){return fallback;}}
 let inventory=[];let sales=getStoredJSON(APP_DATA_KEYS.sales,[]);let scorte=getStoredJSON(APP_DATA_KEYS.scorte,{});
-let carrello=[];let payment='contanti';let pendingCode=null;let lastCode=null;let lastTime=0;const COOLDOWN=800;
+let carrello=[];let payment='contanti';let pendingCode=null;let lastCode=null;let lastTime=0;const COOLDOWN=300;
 let pendingCaricoPistolaCode=null;let activeNumpadInput=null; let numpadBuffer=""; let pdfParsedData=[];
 let pendingCartEditIndex=null;let pendingCartMax=0;
 
-// SISTEMA ALERT CUSTOM PROFESSIONALE
 function showAlert(msg,title='ATTENZIONE',type='warn'){
   document.getElementById('alertTitle').innerText=title;
   document.getElementById('alertMessage').innerText=msg;
@@ -109,14 +103,14 @@ function showAlert(msg,title='ATTENZIONE',type='warn'){
   else {icon.innerText='⚠️';icon.className='w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-orange-100';}
   document.getElementById('customAlert').classList.remove('hidden');
 }
-function closeAlert(){document.getElementById('customAlert').classList.add('hidden');}
+function closeAlert(){document.getElementById('customAlert').classList.add('hidden'); setTimeout(()=>{document.getElementById('pistolaCassa')?.focus();},100);}
 function showSuccess(m,t='FATTO'){showAlert(m,t,'success');}
 function showError(m,t='ERRORE'){showAlert(m,t,'error');}
 function showWarning(m,t='ATTENZIONE'){showAlert(m,t,'warn');}
 function showStock(m,t='MAGAZZINO'){showAlert(m,t,'stock');}
 
 function openNumpad(id,label){activeNumpadInput=document.getElementById(id);numpadBuffer=activeNumpadInput.value||"";document.getElementById('numpadDisplay').innerText=numpadBuffer||"0";document.getElementById('numpadLabel').innerText=label||"INSERISCI NUMERO";document.getElementById('customNumpad').classList.remove('hidden');}
-function closeNumpad(){document.getElementById('customNumpad').classList.add('hidden'); activeNumpadInput=null; pendingCartEditIndex=null;}
+function closeNumpad(){document.getElementById('customNumpad').classList.add('hidden'); activeNumpadInput=null; pendingCartEditIndex=null; setTimeout(()=>{document.getElementById('pistolaCassa')?.focus();},100);}
 function numpadPress(d){if(d==='.' && numpadBuffer.includes('.')) return; if(numpadBuffer.length>=6) return; if(numpadBuffer==="0" && d!==".") numpadBuffer=d; else numpadBuffer+=d; document.getElementById('numpadDisplay').innerText=numpadBuffer;}
 function numpadClear(){numpadBuffer=""; document.getElementById('numpadDisplay').innerText="0";}
 function numpadDel(){numpadBuffer=numpadBuffer.slice(0,-1); document.getElementById('numpadDisplay').innerText=numpadBuffer||"0";}
@@ -140,7 +134,7 @@ function numpadOk(){
 function getScorta(c){if(scorte[c]===undefined)scorte[c]=20;return scorte[c];}
 function saveScorte(){localStorage.setItem(APP_DATA_KEYS.scorte,JSON.stringify(scorte));}
 async function loadInventory(){
-  document.getElementById('statusSupa').innerText='Collego Supabase...';
+  document.getElementById('statusSupa').innerText='CARICO...';
   try{
     const { data, error } = await supa.from('prodotti').select('*').order('marca');
     if(error) throw error;
@@ -149,7 +143,7 @@ async function loadInventory(){
     document.getElementById('statusSupa').className='bg-emerald-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';
   }catch(e){
     console.error('ERRORE SUPABASE:', e);
-    showError('Errore collegamento Supabase:\n'+(e.message||JSON.stringify(e)),'CONNESSIONE');
+    showError('Errore Supabase:\n'+(e.message||JSON.stringify(e)),'CONNESSIONE');
     document.getElementById('statusSupa').innerText='Offline';
     document.getElementById('statusSupa').className='bg-red-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black';
     inventory = getStoredJSON(APP_DATA_KEYS.inventory, []) || [];
@@ -183,28 +177,40 @@ function openTab(n){
 function checkPass(){const i=document.getElementById('passInput').value.trim();if(i==='80939184'){sessionStorage.setItem('admin_ok','1');document.getElementById('passModal').classList.add('hidden');if(window.pendingTab){openTab(window.pendingTab);window.pendingTab=null;}}else{document.getElementById('passError').classList.remove('hidden');document.getElementById('passInput').value='';}}
 function closePassModal(){document.getElementById('passModal').classList.add('hidden');}
 function todayStr(){return new Date().toISOString().split('T')[0];}
-function findProd(c){c=c.trim().toUpperCase();return inventory.find(i=>i.code.toUpperCase()===c) || inventory.find(i=>c.includes(i.code.toUpperCase())) || null;}
+
+function findProd(c){
+  c=c.trim().toUpperCase();
+  let p = inventory.find(i=>i.code.toUpperCase()===c);
+  if(p) return p;
+  p = inventory.find(i=>c.includes(i.code.toUpperCase()));
+  if(p) return p;
+  p = inventory.find(i=>i.code.toUpperCase().includes(c));
+  if(p) return p;
+  if(c.length>=8){
+    let last8 = c.slice(-8);
+    p = inventory.find(i=>i.code.toUpperCase()===last8 || i.code.toUpperCase().includes(last8));
+    if(p) return p;
+  }
+  return null;
+}
 
 function handleScan(code,mode){
   code=code.trim().toUpperCase().replace(/[^0-9A-Z]/g,'');
   if(code.length < 3) return;
-
-  // --- FIX BLOCCO CARRELLO VUOTO ---
   if(inventory.length===0){
     document.getElementById('lastScan').innerText='ATTENDI CARICAMENTO MAGAZZINO...';
-    showWarning('Magazzino non ancora caricato da Supabase.\nAttendi 2 secondi e rispara.','CARICAMENTO');
-    // riprova a caricare
+    showWarning('Magazzino non ancora caricato.\nAttendi 2 sec e rispara.','CARICAMENTO');
     loadInventory();
     return;
   }
-
   const now=Date.now();
-  if(code===lastCode && (now-lastTime)<300) return;
+  if(code===lastCode && (now-lastTime)<COOLDOWN){
+    console.log('Ignoro doppio sparo veloce:',code);
+    return;
+  }
   lastCode=code; lastTime=now;
-  
   let prod=findProd(code);
-  document.getElementById('lastScan').innerText='Letto: '+code + (prod ? ' -> '+prod.marca : ' -> NUOVO');
-
+  document.getElementById('lastScan').innerText='Letto: '+code + (prod? ' -> '+prod.marca : ' -> NUOVO');
   if(!prod){
     if(mode==='carico') openTab('cassa');
     pendingCode=code;
@@ -213,20 +219,20 @@ function handleScan(code,mode){
     setTimeout(()=>{ openNumpad('npQty','QUANTITA'); },200);
     return;
   }
-
   if(mode==='cassa'){
     let inv=inventory.find(i=>i.code===prod.code);
     if(!inv){ showStock('Prodotto non in magazzino','MAGAZZINO'); return; }
-    if(inv.qty<=0){showStock('Esaurito: '+prod.code,'ESAURITO');return;}
+    if(inv.qty<=0){showStock('Prodotto esaurito:\n'+prod.code+'\nGiacenza 0','MAGAZZINO ESAURITO');return;}
     let inCart=carrello.find(c=>c.code===prod.code);
     let qtyGia = inCart? inCart.qty : 0;
     if(qtyGia >= inv.qty){
-      showStock('Hai già '+qtyGia+' pz in carrello.\nDisponibili: '+inv.qty,'STOCK FINITO');
+      showStock('Hai già messo nel carrello tutti i pezzi disponibili!\nDisponibili: '+inv.qty+' pz\nIn carrello: '+qtyGia+' pz','STOCK FINITO');
+      document.getElementById('lastScan').innerText='BLOCCATO STOCK: '+code+' MAX '+inv.qty;
       return;
     }
-    if(inCart){ inCart.qty++; } else { carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1}); }
+    if(inCart){inCart.qty++;} else {carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1});}
     renderAll();
-    setTimeout(()=>{ document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus(); },50);
+    setTimeout(()=>{document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus();},50);
   }else{
     apriPistolaCarico(prod.code);
   }
@@ -308,7 +314,7 @@ function exportCSV(){let csv='data,ora,codici,totale,pagamento\n';sales.forEach(
 function exportOrdineCSV(){let csv='marca,nome,barcode,giacenza,scorta,mancanza,stecche\n';inventory.forEach(p=>{let sc=getScorta(p.code);let diff=sc-p.qty; if(diff>5){let stecche=Math.ceil(Math.min(diff,sc+5)/10); csv+=p.marca+','+p.nome+','+p.code+','+p.qty+','+sc+','+diff+','+stecche+'\n';}});let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='ordine.csv';a.click();}
 function manualAdd(){let code=document.getElementById('manualCode').value.trim();if(!code)return;lastCode=null;handleScan(code,'cassa');document.getElementById('manualCode').value='';}
 function backupDati(){let d=JSON.stringify({inventory,sales,scorte});let b=new Blob([d],{type:'application/json'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='backup-'+todayStr()+'.json';a.click();}
-function restoreDati(inp){let f=inp.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{try{let o=JSON.parse(e.target.result); if(o.inventory) inventory=o.inventory; if(o.sales) sales=o.sales; if(o.scorte) scorte=o.scorte; saveLocal(); renderAll(); showSuccess('Backup ripristinato correttamente.','OPERAZIONE RIUSCITA');}catch(err){showError('Il file selezionato non è valido.','ERRORE');}}; r.readAsText(f);}
+function restoreDati(inp){let f=inp.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{try{let o=JSON.parse(e.target.result); if(o.inventory) inventory=o.inventory; if(o.sales) sales=o.sales; if(o.scorte) scorte=o.scorte; saveLocal(); renderAll(); showSuccess('Backup ripristinato.','FATTO');}catch(err){showError('File non valido.','ERRORE');}}; r.readAsText(f);}
 function openScorteModal(){document.getElementById('scorteModal').classList.remove('hidden');renderScorteModal();}
 function closeScorteModal(){document.getElementById('scorteModal').classList.add('hidden');renderAll();}
 function openOrdineModal(){document.getElementById('ordineModal').classList.remove('hidden');renderOrdine();}
@@ -366,10 +372,33 @@ async function confermaCaricoPDF(){
     else{let np={code:r.code, marca:r.descr.substring(0,20), nome:r.fullCode, prezzo:6.50, qty:r.qty}; await insertProductSupabase(np); inventory.push(np); scorte[r.code]=20;}
   }
   saveLocal(); await loadInventory(); annullaPDF();
-  showSuccess('Caricati '+pdfParsedData.length+' articoli per '+pdfParsedData.reduce((s,x)=>s+x.qty,0)+' pz su Supabase!','CARICO PDF');
+  showSuccess('Caricati '+pdfParsedData.length+' articoli','PDF OK');
 }
-document.getElementById('pistolaCassa').addEventListener('keydown', e=>{if(e.key==='Enter' && e.target.value.trim().length>=3){e.preventDefault();let c=e.target.value.trim();e.target.value='';handleScan(c,'cassa');}});
-document.getElementById('pistolaCarico').addEventListener('keydown', e=>{if(e.key==='Enter' && e.target.value.trim().length>=3){e.preventDefault();let c=e.target.value.trim();e.target.value='';handleScan(c,'carico');}});
+function setupPistola(){
+  const cassa = document.getElementById('pistolaCassa');
+  const carico = document.getElementById('pistolaCarico');
+  if(cassa){
+    cassa.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && e.target.value.trim().length>=3){
+        e.preventDefault();
+        let c=e.target.value.trim();
+        e.target.value='';
+        handleScan(c,'cassa');
+      }
+    });
+  }
+  if(carico){
+    carico.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && e.target.value.trim().length>=3){
+        e.preventDefault();
+        let c=e.target.value.trim();
+        e.target.value='';
+        handleScan(c,'carico');
+      }
+    });
+  }
+}
+setupPistola();
 document.getElementById('passInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')checkPass();});
 loadInventory();setPay('contanti');
 </script>
