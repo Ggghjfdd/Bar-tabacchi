@@ -102,9 +102,27 @@ function showAlert(msg,title='ATTENZIONE',type='warn'){
   else if(type==='stock'){icon.innerText='📦';icon.className='w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-yellow-100';}
   else {icon.innerText='⚠️';icon.className='w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-orange-100';}
   document.getElementById('customAlert').classList.remove('hidden');
+  // blocca la pistola mentre c'è il popup
+  document.getElementById('pistolaCassa').blur();
+  document.getElementById('pistolaCarico').blur();
 }
-function closeAlert(){document.getElementById('customAlert').classList.add('hidden'); setTimeout(()=>{document.getElementById('pistolaCassa')?.focus();},100);}
-function showSuccess(m,t='FATTO'){showAlert(m,t,'success');}
+function closeAlert(){
+  document.getElementById('customAlert').classList.add('hidden');
+  // RESET TOTALE - sblocca la pistola
+  lastCode = null;
+  lastTime = 0;
+  document.getElementById('pistolaCassa').value='';
+  document.getElementById('pistolaCarico').value='';
+  // rimetti focus in base al tab aperto
+  setTimeout(()=>{
+    if(!document.getElementById('tab-cassa').classList.contains('hidden')){
+      document.getElementById('pistolaCassa').focus();
+      document.getElementById('lastScan').innerText='Pronto - spara pure';
+    }else if(!document.getElementById('tab-carico').classList.contains('hidden')){
+      document.getElementById('pistolaCarico').focus();
+    }
+  },100);
+}function showSuccess(m,t='FATTO'){showAlert(m,t,'success');}
 function showError(m,t='ERRORE'){showAlert(m,t,'error');}
 function showWarning(m,t='ATTENZIONE'){showAlert(m,t,'warn');}
 function showStock(m,t='MAGAZZINO'){showAlert(m,t,'stock');}
@@ -374,7 +392,13 @@ async function confermaCaricoPDF(){
   saveLocal(); await loadInventory(); annullaPDF();
   showSuccess('Caricati '+pdfParsedData.length+' articoli','PDF OK');
 }
-function setupPistola(){
+function setupPistola(){// se spari mentre c'è il popup di esaurito, chiudi il popup e spara di nuovo
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' &&!document.getElementById('customAlert').classList.contains('hidden')){
+    e.preventDefault();
+    closeAlert();
+  }
+});
   const cassa = document.getElementById('pistolaCassa');
   const carico = document.getElementById('pistolaCarico');
   if(cassa){
