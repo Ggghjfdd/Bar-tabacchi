@@ -11,13 +11,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0f172a">
-<title>Bar Tabacchi V9.7 ANTI-BLOCCO</title>
-<link rel="manifest" href="./manifest.json?v=v9.7-antiblocco">
-<link rel="icon" href="./icons/icon.svg?v=v9.7" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.7">
+<title>Bar Tabacchi V9.8.1 FIX POPUP</title>
+<link rel="manifest" href="./manifest.json?v=v9.8.1">
+<link rel="icon" href="./icons/icon.svg?v=v9.8.1" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon-180.png?v=v9.8.1">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-const APP_VERSION='v9.7-antiblocco-qta';
+const APP_VERSION='v9.8.1-fix-popup';
 if(localStorage.getItem('bt_ver')!==APP_VERSION){
  if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));}
  if('caches' in window){caches.keys().then(k=>k.forEach(c=>caches.delete(c)));}
@@ -35,7 +35,7 @@ if('serviceWorker' in navigator){
 <body>
 <header class="sticky top-0 z-50 bg-white border-b shadow-sm">
 <div class="bg-slate-900 px-4 py-3 flex justify-between items-center" style="padding-top:calc(12px + env(safe-area-inset-top))">
-<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.7</h1><p class="text-slate-400 text-[10px] font-bold">ANTI-BLOCCO + QTA 2-MAX</p></div></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black">BT</div><div><h1 class="text-white font-black text-[15px]">BAR TABACCHI V9.8.1</h1><p class="text-slate-400 text-[10px] font-bold">FIX POPUP ESAURITO</p></div></div>
 <div id="statusSupa" class="bg-yellow-400 text-black px-3 py-1.5 rounded-full text-[10px] font-black">SUPABASE...</div>
 </div>
 <div class="px-3 py-2 flex gap-2 overflow-x-auto bg-white">
@@ -58,6 +58,7 @@ if('serviceWorker' in navigator){
         <h3 id="alertTitle" class="text-[24px] font-black text-slate-900 leading-none">ATTENZIONE</h3>
         <p id="alertMessage" class="mt-4 text-[18px] font-bold text-slate-700 leading-relaxed whitespace-pre-line">Messaggio</p>
         <button onclick="closeAlert()" class="w-full mt-6 bg-slate-900 text-white rounded-2xl py-4 text-[18px] font-black">OK CAPITO</button>
+        <p class="text-[10px] text-center mt-3 text-slate-400 font-bold">SPARA UN ALTRO ARTICOLO PER CHIUDERE AUTOMATICAMENTE</p>
     </div>
 </div>
 <div id="customNumpad" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-end justify-center p-3" onclick="if(event.target.id==='customNumpad') closeNumpad()"><div class="bg-white rounded-[24px] w-full max-w-[360px] p-4 shadow-2xl border-4 border-black"><div class="flex justify-between items-center mb-3"><span id="numpadLabel" class="font-black text-[13px]">QUANTITA'</span><button onclick="closeNumpad()" class="w-8 h-8 bg-slate-100 rounded-full font-bold">x</button></div><div id="numpadDisplay" class="bg-black text-yellow-300 rounded-xl p-4 text-[40px] font-black text-center font-mono mb-3 tracking-widest">0</div><div class="grid grid-cols-3 gap-2"><button onclick="numpadPress('1')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">1</button><button onclick="numpadPress('2')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">2</button><button onclick="numpadPress('3')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">3</button><button onclick="numpadPress('4')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">4</button><button onclick="numpadPress('5')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">5</button><button onclick="numpadPress('6')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">6</button><button onclick="numpadPress('7')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">7</button><button onclick="numpadPress('8')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">8</button><button onclick="numpadPress('9')" class="bg-slate-100 rounded-2xl py-6 font-black text-[24px]">9</button><button onclick="numpadClear()" class="bg-red-500 text-white rounded-2xl py-6 font-black text-[16px]">C</button><button onclick="numpadPress('0')" class="bg-slate-900 text-white rounded-2xl py-6 font-black text-[24px]">0</button><button onclick="numpadDel()" class="bg-orange-400 text-black rounded-2xl py-6 font-black text-[22px]">⌫</button></div><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="numpadPress('.')" class="bg-white border-2 rounded-2xl py-4 font-black text-[20px]">.</button><button onclick="numpadOk()" class="bg-emerald-500 text-white rounded-2xl py-4 font-black text-[16px]">OK</button></div></div></div>
@@ -68,7 +69,7 @@ if('serviceWorker' in navigator){
 <main class="max-w-[1400px] mx-auto p-3 md:p-6 pb-24">
 <div id="tab-cassa" class="tab-page"><div class="grid grid-cols-12 gap-4"><div class="col-span-12 lg:col-span-7 bg-white rounded-2xl border p-5">
 <h2 class="font-black text-[13px] tracking-widest">CASSA</h2>
-<input id="pistolaCassa" style="position:absolute; left:-9999px; opacity:0; width:1px; height:1px;" autofocus>
+<input id="pistolaCassa" autocomplete="off" style="position:fixed; left:10px; top:10px; width:1px; height:1px; opacity:0.01; z-index:1;" autofocus>
 <div class="mt-3 bg-emerald-50 border-2 border-emerald-200 rounded-xl p-2.5 text-center">
 <p class="text-[10px] font-black text-emerald-700 tracking-widest">🔫 PISTOLA ATTIVA - SPARA PURE</p>
 </div>
@@ -102,27 +103,22 @@ function showAlert(msg,title='ATTENZIONE',type='warn'){
   else if(type==='stock'){icon.innerText='📦';icon.className='w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-yellow-100';}
   else {icon.innerText='⚠️';icon.className='w-14 h-14 rounded-full flex items-center justify-center text-[28px] font-black mb-4 bg-orange-100';}
   document.getElementById('customAlert').classList.remove('hidden');
-  // blocca la pistola mentre c'è il popup
-  document.getElementById('pistolaCassa').blur();
-  document.getElementById('pistolaCarico').blur();
 }
 function closeAlert(){
   document.getElementById('customAlert').classList.add('hidden');
-  // RESET TOTALE - sblocca la pistola
   lastCode = null;
   lastTime = 0;
   document.getElementById('pistolaCassa').value='';
   document.getElementById('pistolaCarico').value='';
-  // rimetti focus in base al tab aperto
   setTimeout(()=>{
     if(!document.getElementById('tab-cassa').classList.contains('hidden')){
       document.getElementById('pistolaCassa').focus();
-      document.getElementById('lastScan').innerText='Pronto - spara pure';
     }else if(!document.getElementById('tab-carico').classList.contains('hidden')){
       document.getElementById('pistolaCarico').focus();
     }
-  },100);
-}function showSuccess(m,t='FATTO'){showAlert(m,t,'success');}
+  },50);
+}
+function showSuccess(m,t='FATTO'){showAlert(m,t,'success');}
 function showError(m,t='ERRORE'){showAlert(m,t,'error');}
 function showWarning(m,t='ATTENZIONE'){showAlert(m,t,'warn');}
 function showStock(m,t='MAGAZZINO'){showAlert(m,t,'stock');}
@@ -216,13 +212,15 @@ function handleScan(code,mode){
   code=code.trim().toUpperCase().replace(/[^0-9A-Z]/g,'');
   if(code.length < 3) return;
 
-  // FIX: se c'è un popup aperto, chiudilo subito quando spari altro
+  // FIX POPUP AUTO-CHIUSURA: se c'è popup aperto, chiudilo e continua
   if(!document.getElementById('customAlert').classList.contains('hidden')){
-    closeAlert();
+    document.getElementById('customAlert').classList.add('hidden');
+    lastCode = null;
+    lastTime = 0;
   }
-  
+
   if(inventory.length===0){
-    document.getElementById('lastScan').innerText='ATTENDI CARICAMENTO MAGAZZINO...';
+    document.getElementById('lastScan').innerText='ATTENDI CARICAMENTO...';
     showWarning('Magazzino non ancora caricato.\nAttendi 2 sec e rispara.','CARICAMENTO');
     loadInventory();
     return;
@@ -256,7 +254,6 @@ function handleScan(code,mode){
     }
     if(inCart){inCart.qty++;} else {carrello.push({code:prod.code,marca:prod.marca,nome:prod.nome,prezzo:prod.prezzo,qty:1});}
     renderAll();
-    setTimeout(()=>{document.getElementById('pistolaCassa').value=''; document.getElementById('pistolaCassa').focus();},50);
   }else{
     apriPistolaCarico(prod.code);
   }
@@ -280,7 +277,7 @@ function apriPistolaCarico(code){
 function chiudiPistolaCarico(){document.getElementById('pistolaCaricoModal').classList.add('hidden');pendingCaricoPistolaCode=null;document.getElementById('pistolaCarico').value='';document.getElementById('pistolaCarico').focus();}
 async function confermaPistolaCarico(){let qty=parseInt(document.getElementById('pCaricoQty').value);if(!qty||qty<=0){showWarning('Devi inserire una quantità.','QUANTITÀ');return;}let prod=inventory.find(p=>p.code===pendingCaricoPistolaCode);if(!prod) return;let nuova=prod.qty+qty;await updateQtySupabase(prod.code, nuova);prod.qty=nuova;renderAll();chiudiPistolaCarico();document.getElementById('lastScan').innerText='Carico +'+qty+' | Tot '+nuova;}
 async function saveNewProduct(){let marca=document.getElementById('npMarca').value||'CiccioCiccio';let nome=document.getElementById('npNome').value||'Std';let prezzo=parseFloat(document.getElementById('npPrezzo').value)||6.70;let qty=parseInt(document.getElementById('npQty').value)||10;let code=pendingCode;let ex=inventory.find(x=>x.code.toUpperCase()===code.toUpperCase());if(ex){let nuova=ex.qty+qty;await updateQtySupabase(ex.code, nuova);ex.qty=nuova;}else{let np={code:code,marca:marca,nome:nome,prezzo:prezzo,qty:qty};await insertProductSupabase(np);inventory.push(np);scorte[code]=20;}saveLocal();document.getElementById('newProductAlert').classList.add('hidden');pendingCode=null;renderAll();await loadInventory();}
-function cancelNew(){document.getElementById('newProductAlert').classList.add('hidden');pendingCode=null;}
+function cancelNew(){document.getElementById('newProductAlert').classList.add('hidden');pendingCode=null;document.getElementById('pistolaCassa').focus();}
 function renderCatalog(){const g=document.getElementById('catalogoGrid');if(!g)return;g.innerHTML='';inventory.filter(i=>i.qty>0).forEach(p=>{let d=document.createElement('div');d.className='bg-slate-50 border rounded-xl p-3 cursor-pointer hover:bg-yellow-50';d.innerHTML='<p class="font-bold text-[11px] uppercase">'+p.marca+' '+p.nome+'</p><p class="font-mono text-[10px] text-slate-500">'+p.code+' - €'+p.prezzo.toFixed(2)+' - '+p.qty+' pz</p>';d.onclick=()=>{lastCode=null;handleScan(p.code,'cassa');};g.appendChild(d);});document.getElementById('countCatalogo').innerText=inventory.filter(i=>i.qty>0).length+' prodotti';}
 function editCartQty(idx){
   let item=carrello[idx];
@@ -398,13 +395,7 @@ async function confermaCaricoPDF(){
   saveLocal(); await loadInventory(); annullaPDF();
   showSuccess('Caricati '+pdfParsedData.length+' articoli','PDF OK');
 }
-function setupPistola(){// se spari mentre c'è il popup di esaurito, chiudi il popup e spara di nuovo
-document.addEventListener('keydown', e=>{
-  if(e.key==='Enter' &&!document.getElementById('customAlert').classList.contains('hidden')){
-    e.preventDefault();
-    closeAlert();
-  }
-});
+function setupPistola(){
   const cassa = document.getElementById('pistolaCassa');
   const carico = document.getElementById('pistolaCarico');
   if(cassa){
