@@ -215,6 +215,12 @@ function findProd(c){
 function handleScan(code,mode){
   code=code.trim().toUpperCase().replace(/[^0-9A-Z]/g,'');
   if(code.length < 3) return;
+
+  // FIX: se c'è un popup aperto, chiudilo subito quando spari altro
+  if(!document.getElementById('customAlert').classList.contains('hidden')){
+    closeAlert();
+  }
+  
   if(inventory.length===0){
     document.getElementById('lastScan').innerText='ATTENDI CARICAMENTO MAGAZZINO...';
     showWarning('Magazzino non ancora caricato.\nAttendi 2 sec e rispara.','CARICAMENTO');
