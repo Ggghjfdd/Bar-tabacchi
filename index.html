@@ -33,6 +33,7 @@ if('serviceWorker' in navigator){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
+ .key{ background:#f1f5f9; border-radius:10px; font-weight:900; }
 *{font-family:Inter,sans-serif;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;width:100%;overflow-x:hidden;background:#f1f5f9;touch-action:manipulation}
 body{padding-top:env(safe-area-inset-top);padding-bottom:110px;font-size:18px}
@@ -81,45 +82,41 @@ input,select,textarea{min-height:58px;font-size:18px}
 </div>
 </div>
 
-<!-- NUMPAD UNICO -->
-<div id="customNumpad" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-end justify-center p-3" onclick="if(event.target.id==='customNumpad') closeNumpad()">
-<div class="bg-white rounded-[28px] w-full max-w-[500px] p-5 shadow-2xl border-4 border-black">
-<div class="flex justify-between items-center mb-4"><span id="numpadLabel" class="font-black text-[18px]">QUANTITÀ</span><button onclick="closeNumpad()" class="w-12 h-12 bg-slate-100 rounded-full font-black text-xl">×</button></div>
-<div id="numpadDisplay" class="bg-black text-yellow-300 rounded-2xl p-5 text-[52px] font-black text-center font-mono mb-4 tracking-widest">0</div>
-<div class="grid grid-cols-3 gap-3">
-<button onclick="numpadPress('1')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">1</button>
-<button onclick="numpadPress('2')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">2</button>
-<button onclick="numpadPress('3')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">3</button>
-<button onclick="numpadPress('4')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">4</button>
-<button onclick="numpadPress('5')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">5</button>
-<button onclick="numpadPress('6')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">6</button>
-<button onclick="numpadPress('7')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">7</button>
-<button onclick="numpadPress('8')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">8</button>
-<button onclick="numpadPress('9')" class="bg-slate-100 rounded-2xl py-7 font-black text-[30px]">9</button>
-<button onclick="numpadClear()" class="bg-red-500 text-white rounded-2xl py-7 font-black text-[20px]">C</button>
-<button onclick="numpadPress('0')" class="bg-slate-900 text-white rounded-2xl py-7 font-black text-[30px]">0</button>
-<button onclick="numpadDel()" class="bg-orange-400 rounded-2xl py-7 font-black text-[26px]">⌫</button>
+<!-- NUMPAD UNICO COMPACT -->
+<div id="customNumpad" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-end justify-center p-2" onclick="if(event.target.id==='customNumpad') closeNumpad()">
+<div class="bg-white rounded-[20px] w-full max-w-[320px] p-3 shadow-2xl border-2 border-black">
+<div class="flex justify-between items-center mb-2"><span id="numpadLabel" class="font-black text-[12px]">QUANTITÀ</span><button onclick="closeNumpad()" class="w-8 h-8 bg-slate-100 rounded-full font-black">×</button></div>
+<div id="numpadDisplay" class="bg-black text-yellow-300 rounded-xl p-2.5 text-[28px] font-black text-center font-mono mb-2">0</div>
+<div class="grid grid-cols-3 gap-1.5">
+<button onclick="numpadPress('1')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">1</button>
+<button onclick="numpadPress('2')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">2</button>
+<button onclick="numpadPress('3')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">3</button>
+<button onclick="numpadPress('4')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">4</button>
+<button onclick="numpadPress('5')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">5</button>
+<button onclick="numpadPress('6')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">6</button>
+<button onclick="numpadPress('7')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">7</button>
+<button onclick="numpadPress('8')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">8</button>
+<button onclick="numpadPress('9')" class="bg-slate-100 rounded-xl py-3 font-black text-[18px]">9</button>
+<button onclick="numpadClear()" class="bg-red-500 text-white rounded-xl py-3 font-black text-[14px]">C</button>
+<button onclick="numpadPress('0')" class="bg-slate-900 text-white rounded-xl py-3 font-black text-[18px]">0</button>
+<button onclick="numpadDel()" class="bg-orange-400 rounded-xl py-3 font-black text-[16px]">⌫</button>
 </div>
-<div class="grid grid-cols-2 gap-3 mt-4"><button onclick="numpadPress('.')" class="bg-white border-2 rounded-2xl py-5 font-black text-[28px]">.</button><button onclick="numpadOk()" class="bg-emerald-500 text-white rounded-2xl py-5 font-black text-[22px]">OK</button></div>
+<div class="grid grid-cols-2 gap-1.5 mt-2"><button onclick="numpadPress('.')" class="bg-white border-2 rounded-xl py-2.5 font-black text-[16px]">.</button><button onclick="numpadOk()" class="bg-emerald-500 text-white rounded-xl py-2.5 font-black text-[14px]">OK</button></div>
 </div>
 </div>
 
-<!-- ALPHA UNICO -->
+<!-- ALPHA COMPACT -->
 <div id="alphaKeyboard" class="hidden fixed inset-0 z-[350] bg-black/80 flex items-end justify-center p-2">
-<div class="bg-white rounded-[24px] w-full max-w-[700px] p-4 shadow-2xl border-4 border-black">
-<div class="flex justify-between items-center mb-3"><span id="alphaLabel" class="font-black text-[18px]">NOME TURNO</span><button onclick="closeAlphaKeyboard()" class="w-12 h-12 bg-slate-100 rounded-full font-black">×</button></div>
-<div id="alphaDisplay" class="bg-black text-yellow-300 rounded-xl p-5 text-[32px] font-black text-center mb-3 min-h-[72px] flex items-center justify-center">|</div>
-<div class="space-y-2">
-<div class="grid grid-cols-10 gap-2"><button onclick="alphaPress('Q')" class="key">Q</button><button onclick="alphaPress('W')" class="key">W</button><button onclick="alphaPress('E')" class="key">E</button><button onclick="alphaPress('R')" class="key">R</button><button onclick="alphaPress('T')" class="key">T</button><button onclick="alphaPress('Y')" class="key">Y</button><button onclick="alphaPress('U')" class="key">U</button><button onclick="alphaPress('I')" class="key">I</button><button onclick="alphaPress('O')" class="key">O</button><button onclick="alphaPress('P')" class="key">P</button></div>
-<div class="grid grid-cols-9 gap-2 px-4"><button onclick="alphaPress('A')" class="key">A</button><button onclick="alphaPress('S')" class="key">S</button><button onclick="alphaPress('D')" class="key">D</button><button onclick="alphaPress('F')" class="key">F</button><button onclick="alphaPress('G')" class="key">G</button><button onclick="alphaPress('H')" class="key">H</button><button onclick="alphaPress('J')" class="key">J</button><button onclick="alphaPress('K')" class="key">K</button><button onclick="alphaPress('L')" class="key">L</button></div>
-<div class="grid grid-cols-8 gap-2 px-8"><button onclick="alphaPress('Z')" class="key">Z</button><button onclick="alphaPress('X')" class="key">X</button><button onclick="alphaPress('C')" class="key">C</button><button onclick="alphaPress('V')" class="key">V</button><button onclick="alphaPress('B')" class="key">B</button><button onclick="alphaPress('N')" class="key">N</button><button onclick="alphaPress('M')" class="key">M</button><button onclick="alphaDel()" class="bg-orange-400 rounded-xl py-4 font-black">⌫</button></div>
-<div class="grid grid-cols-4 gap-2 mt-3"><button onclick="alphaPress(' ')" class="col-span-2 bg-slate-100 rounded-xl py-4 font-black">SPAZIO</button><button onclick="alphaClear()" class="bg-red-500 text-white rounded-xl py-4 font-black">CANC</button><button onclick="alphaOk()" class="bg-emerald-500 text-white rounded-xl py-4 font-black">OK</button></div>
+<div class="bg-white rounded-[20px] w-full max-w-[420px] p-3 shadow-2xl border-2 border-black">
+<div class="flex justify-between items-center mb-2"><span id="alphaLabel" class="font-black text-[12px]">NOME TURNO</span><button onclick="closeAlphaKeyboard()" class="w-8 h-8 bg-slate-100 rounded-full font-black">×</button></div>
+<div id="alphaDisplay" class="bg-black text-yellow-300 rounded-xl p-2.5 text-[20px] font-black text-center mb-2 min-h-[48px] flex items-center justify-center">|</div>
+<div class="space-y-1.5">
+<div class="grid grid-cols-10 gap-1"><button onclick="alphaPress('Q')" class="key py-2.5 text-[13px]">Q</button><button onclick="alphaPress('W')" class="key py-2.5 text-[13px]">W</button><button onclick="alphaPress('E')" class="key py-2.5 text-[13px]">E</button><button onclick="alphaPress('R')" class="key py-2.5 text-[13px]">R</button><button onclick="alphaPress('T')" class="key py-2.5 text-[13px]">T</button><button onclick="alphaPress('Y')" class="key py-2.5 text-[13px]">Y</button><button onclick="alphaPress('U')" class="key py-2.5 text-[13px]">U</button><button onclick="alphaPress('I')" class="key py-2.5 text-[13px]">I</button><button onclick="alphaPress('O')" class="key py-2.5 text-[13px]">O</button><button onclick="alphaPress('P')" class="key py-2.5 text-[13px]">P</button></div>
+<div class="grid grid-cols-9 gap-1 px-2"><button onclick="alphaPress('A')" class="key py-2.5 text-[13px]">A</button><button onclick="alphaPress('S')" class="key py-2.5 text-[13px]">S</button><button onclick="alphaPress('D')" class="key py-2.5 text-[13px]">D</button><button onclick="alphaPress('F')" class="key py-2.5 text-[13px]">F</button><button onclick="alphaPress('G')" class="key py-2.5 text-[13px]">G</button><button onclick="alphaPress('H')" class="key py-2.5 text-[13px]">H</button><button onclick="alphaPress('J')" class="key py-2.5 text-[13px]">J</button><button onclick="alphaPress('K')" class="key py-2.5 text-[13px]">K</button><button onclick="alphaPress('L')" class="key py-2.5 text-[13px]">L</button></div>
+<div class="grid grid-cols-8 gap-1 px-4"><button onclick="alphaPress('Z')" class="key py-2.5 text-[13px]">Z</button><button onclick="alphaPress('X')" class="key py-2.5 text-[13px]">X</button><button onclick="alphaPress('C')" class="key py-2.5 text-[13px]">C</button><button onclick="alphaPress('V')" class="key py-2.5 text-[13px]">V</button><button onclick="alphaPress('B')" class="key py-2.5 text-[13px]">B</button><button onclick="alphaPress('N')" class="key py-2.5 text-[13px]">N</button><button onclick="alphaPress('M')" class="key py-2.5 text-[13px]">M</button><button onclick="alphaDel()" class="bg-orange-400 rounded-xl py-2.5 font-black text-[13px]">⌫</button></div>
+<div class="grid grid-cols-4 gap-1 mt-2"><button onclick="alphaPress(' ')" class="col-span-2 bg-slate-100 rounded-xl py-2.5 font-black text-[12px]">SPAZIO</button><button onclick="alphaClear()" class="bg-red-500 text-white rounded-xl py-2.5 font-black text-[12px]">C</button><button onclick="alphaOk()" class="bg-emerald-500 text-white rounded-xl py-2.5 font-black text-[12px]">OK</button></div>
 </div>
 </div>
-</div>
-
-<div id="passModal" class="hidden fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-<div class="bg-white rounded-3xl p-6 max-w-[420px] w-full shadow-2xl"><h3 class="text-[20px] font-black">ACCESSO RISERVATO</h3><p class="text-[13px] mt-2 text-slate-500">Password per: <span id="passAreaName" class="font-black"></span></p><input id="passInput" type="password" inputmode="numeric" placeholder="••••••••" class="mt-4 w-full border-2 rounded-2xl px-4 py-4 text-[20px] font-black text-center"><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="checkPass()" class="bg-slate-900 text-white rounded-2xl py-4 font-black">SBLOCCA</button><button onclick="closePassModal()" class="bg-white border-2 rounded-2xl py-4 font-black">ANNULLA</button></div><p id="passError" class="hidden text-red-600 text-[13px] font-black mt-3 text-center">PASSWORD ERRATA</p></div>
 </div>
 
 <!-- MODALS -->
