@@ -389,12 +389,9 @@ function calcMedie(){
   inventory.forEach(async prod=>{
     let pezzi=0;
     sales.forEach(s=>{
-      let dataVendita=new Date(s.date.split('/').reverse().join('-') || s.date);
-      // fallback semplice: conta tutto se parse fallisce, ma meglio filtrare 30gg con ISO
       let item=s.items.find(i=>i.code===prod.code);
       if(item) pezzi+=item.qty;
     });
-    // media ultimi 30gg - per precisione divido per 30, poi volendo filtri data
     let media=pezzi/30;
     if(media<0.01 && prod.qty>0) media=0.1;
     await supa.from(TABLE_MASTER).update({media_giornaliera:media}).eq('barcode',prod.code);
@@ -402,7 +399,6 @@ function calcMedie(){
     prod.giorni_copertura= media>0? prod.qty/media : 999;
   });
   setTimeout(()=>loadInventory(),1200);
-  showSuccess('Medie ricalcolate - Giorni copertura aggiornati','ROTAZIONE V14');
 }
 window.addEventListener('DOMContentLoaded',()=>{ loadInventory();
   document.getElementById('pistolaCassa')?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ handleScan(e.target.value,'cassa'); e.target.value=''; }});
