@@ -259,7 +259,7 @@ function numpadOk(){
     let isCaricoPistola= activeNumpadInput && activeNumpadInput.id==='pCaricoQty';
     let buf=numpadBuffer; closeNumpad(); if(isCaricoPistola && buf){ confermaPistolaCarico(); }
 }
-function getScorta(c){if(scorte[c]===undefined)scorte[c]=20;return scorte[c];}
+function getScorta(c){if(scorte[c]===undefined)scorte[c]=20; return parseInt(scorte[c])||0;}
 function saveScorte(){localStorage.setItem(APP_DATA_KEYS.scorte,JSON.stringify(scorte));}
 function saveTurni(){localStorage.setItem(APP_DATA_KEYS.turni,JSON.stringify(turni)); localStorage.setItem(APP_DATA_KEYS.currentTurno,JSON.stringify(currentTurno)); localStorage.setItem(APP_DATA_KEYS.sales,JSON.stringify(sales)); updateTurnoUI();}
 function apriInizioTurno(){if(currentTurno){ showWarning('C\'è già un turno aperto:\n'+currentTurno.nome,'TURNO APERTO'); return; } openAlphaKeyboard('NOME TURNO / DIPENDENTE','', (nome)=>{ let now=new Date(); currentTurno={id:Date.now(), nome:nome.toUpperCase(), data:now.toISOString().split('T')[0], startTime:now.toLocaleTimeString('it-IT'), startISO:now.toISOString(), endTime:null, endISO:null, salesIds:[], incasso:0, pezzi:0}; turni.unshift(currentTurno); saveTurni(); renderAll(); showSuccess('Turno iniziato:\n'+nome.toUpperCase(),'TURNO APERTO'); });}
