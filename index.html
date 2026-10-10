@@ -319,15 +319,69 @@ async function finalizza(){
    showWarning('DEVI APRIRE UN TURNO PRIMA DI VENDERE!\n\nVai sotto e clicca INIZIA TURNO','TURNO CHIUSO');
    return;
  }
- let tot=carrello.reduce((s,i)=>s+i.prezzo*i.qty,0); 
+ let tot=carrello.reduce((s,i)=>s+i.prezzo*i.qty,0);
  for(let it of carrello){
    let inv=inventory.find(x=>x.code===it.code);
    if(inv){
-     let nuova=inv.qty-it.qty; 
-     await updateQtySupabase(inv.code, nuova); 
+     let nuova=inv.qty-it.qty;
+     await updateQtySupabase(inv.code, nuova);
      inv.qty=nuova;
    }
- } let vendita={id:Date.now(),date:todayStr(),time:new Date().toLocaleTimeString('it-IT'),items:[...carrello],totale:tot,payment:payment,turnoId:currentTurno?currentTurno.id:null,turnoNome:currentTurno?currentTurno.nome:null}; sales.unshift(vendita); if(currentTurno){currentTurno.incasso+=tot; currentTurno.pezzi+=carrello.reduce((a,b)=>a+b.qty,0); currentTurno.salesIds.push(vendita.id); let idx=turni.findIndex(t=>t.id===currentTurno.id); if(idx>=0) turni[idx]= {...currentTurno};} carrello=[]; saveLocal(); saveTurni(); renderAll(); mostraVenditaConclusa(tot); calcMedie(); setTimeout(()=>{const p=document.getElementById('pistolaCassa'); if(p){p.value=''; p.focus();}},50);}
+ }
+ let vendita={
+   id:Date.now(),
+   date:todayStr(),
+   time:new Date().toLocaleTimeString('it-IT'),
+   items:[...carrello],
+   totale:tot,
+   payment:payment,
+   turnoId:currentTurno?currentTurno.id:null,
+   turnoNome:currentTurno?currentTurno.nome:null
+ };
+ sales.unshift(vendita);
+
+ // --- SYNC SUPABASE PER TELEFONO ---
+ try{
+   await supa.from('vendite').insert([{
+     id: vendita.id,
+     data: vendita.date,
+     ora: vendita.time,
+     totale: vendita.totale,
+     payment: vendita.payment,
+     turno_id: String(vendita.turnoId),
+     turno_nome: vendita.turnoNome,
+     items: vendita.items
+   }]);
+ }catch(e){ console.log('sync vendite err', e.message); }
+
+ if(currentTurno){
+   currentTurno.incasso+=tot;
+   currentTurno.pezzi+=carrello.reduce((a,b)=>a+b.qty,0);
+   currentTurno.salesIds.push(vendita.id);
+   let idx=turni.findIndex(t=>t.id===currentTurno.id);
+   if(idx>=0) turni[idx]= {...currentTurno};
+   try{
+     await supa.from('turni').upsert({
+       id: String(currentTurno.id),
+       nome: currentTurno.nome,
+       data: currentTurno.data,
+       inizio: currentTurno.inizio,
+       fine: currentTurno.fine || null,
+       incasso: currentTurno.incasso,
+       pezzi: currentTurno.pezzi,
+       sales_ids: currentTurno.salesIds,
+       chiuso: false
+     }, {onConflict: 'id'});
+   }catch(e){}
+ }
+ carrello=[];
+ saveLocal();
+ saveTurni();
+ renderAll();
+ mostraVenditaConclusa(tot);
+ calcMedie();
+ setTimeout(()=>{const p=document.getElementById('pistolaCassa'); if(p){p.value=''; p.focus();}},50);
+}
 function exportCSV(){let csv='data,ora,turno,codici,totale,pagamento\n';sales.forEach(s=>{csv+=s.date+','+s.time+','+(s.turnoNome||'')+',"'+s.items.map(i=>i.code).join(';')+'",'+s.totale+','+s.payment+'\n';});let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='resoconto.csv';a.click();}
 function exportTurnoCSV(){let modalId=document.getElementById('turnoReportModal').dataset.turnoId; if(!modalId) return exportTurniCSV(); let id=parseInt(modalId); let turno=turni.find(t=>t.id===id); let vendite=sales.filter(s=>s.turnoId===id); let csv='Turno,'+turno.nome+','+turno.data+'\n'; csv+='data,ora,articoli,totale,pagamento\n'; vendite.forEach(s=>{csv+=s.date+','+s.time+',"'+s.items.map(i=>i.marca+' x'+i.qty).join(';')+'",'+s.totale+','+s.payment+'\n';}); let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='turno-'+turno.nome+'.csv';a.click();}
 function exportTurniCSV(){let csv='id,nome,data,inizio,fine,incasso,pezzi,scontrini\n'; turni.forEach(t=>{let vendite=sales.filter(s=>s.turnoId===t.id); let tot=vendite.reduce((a,b)=>a+b.totale,0); let pz=vendite.reduce((a,b)=>a+b.items.reduce((x,y)=>x+y.qty,0),0); csv+=t.id+','+t.nome+','+t.data+','+t.startTime+','+(t.endTime||'')+','+tot.toFixed(2)+','+pz+','+vendite.length+'\n';}); let b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='turni.csv';a.click();}
